@@ -1,4 +1,4 @@
 package sk.stuba.fei.uim.oop.board.tile;
 
-public class StraightPipe {
+public class StraightPipe extends Tile{
 }

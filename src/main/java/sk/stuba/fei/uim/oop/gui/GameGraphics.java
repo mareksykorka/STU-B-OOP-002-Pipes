@@ -7,14 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameGraphics extends JFrame {
-
     private Board currentBoard;
-    private GameMenu currentMenu;
 
     public GameGraphics(){
         this.setTitle("Pipes");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800,800);
+        this.setSize(800,900);
         this.setResizable(false);
         this.setFocusable(true);
         this.requestFocusInWindow();
@@ -31,8 +29,8 @@ public class GameGraphics extends JFrame {
 
     @Override
     public void repaint(){
-        super.repaint();
         this.revalidate();
+        super.repaint();
     }
 
     public void setBoard(Board board){
