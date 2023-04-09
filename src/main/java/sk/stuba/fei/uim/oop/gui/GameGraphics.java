@@ -1,44 +1,47 @@
 package sk.stuba.fei.uim.oop.gui;
 
+import sk.stuba.fei.uim.oop.board.Board;
 import sk.stuba.fei.uim.oop.logic.GameLogic;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GameGraphics {
+public class GameGraphics extends JFrame {
 
-    public GameGraphics() {
-        JFrame frame = new JFrame("Pipes");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,800);
-        frame.setResizable(false);
-        frame.setFocusable(true);
-        frame.requestFocusInWindow();
-        frame.setLayout(new BorderLayout());
+    private Board currentBoard;
+    private GameMenu currentMenu;
 
-        GameLogic logic = new GameLogic(frame);
-        frame.addKeyListener(logic);
+    public GameGraphics(){
+        this.setTitle("Pipes");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(800,800);
+        this.setResizable(false);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+        this.setLayout(new BorderLayout());
 
-        JPanel gameMenu = new JPanel();
-        gameMenu.setBackground(Color.DARK_GRAY);
-        JButton buttonRestart = new JButton("RESTART");
-        buttonRestart.addActionListener(logic);
-        buttonRestart.setFocusable(false);
+        GameLogic logic = new GameLogic(this);
+        this.addKeyListener(logic);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 12, 8);
-        slider.setMinorTickSpacing(1);
-        slider.setMajorTickSpacing(1);
-        slider.setSnapToTicks(true);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
-        slider.addChangeListener(logic);
+        GameMenu currentMenu = new GameMenu(logic);
+        this.add(currentMenu, BorderLayout.PAGE_START);
 
-        gameMenu.setLayout(new GridLayout(2, 2));
-        gameMenu.add(buttonRestart);
-        gameMenu.add(logic.getBoardSizeLabel());
-        gameMenu.add(slider);
-        frame.add(gameMenu, BorderLayout.PAGE_START);
-
-        frame.setVisible(true);
+        this.setVisible(true);
     }
+
+    @Override
+    public void repaint(){
+        super.repaint();
+        this.revalidate();
+    }
+
+    public void setBoard(Board board){
+        if(this.currentBoard != null){
+            this.remove(this.currentBoard);
+        }
+        this.currentBoard = board;
+        this.add(board);
+        this.repaint();
+    }
+
 }
