@@ -6,15 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class BentPipe extends Tile{
+public class EndPipe extends Tile{
 
-    public BentPipe(HashMap<Direction, Boolean> connector){
+    public EndPipe(){
         this.playable = false;
         this.highlight = false;
         this.initConnector();
         this.neighbour = new HashMap<>();
         this.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.defaultColor = Color.CYAN;
+        this.defaultColor = Color.BLUE;
         this.setBackground(this.defaultColor);
     }
 
@@ -29,7 +29,7 @@ public class BentPipe extends Tile{
     }
 
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Dimension dimen = this.getSize();
 
@@ -47,7 +47,7 @@ public class BentPipe extends Tile{
         }
 
 
-        if(this.highlight){
+        if (this.highlight) {
             setBackground(Color.RED);
             this.highlight = false;
         } else {

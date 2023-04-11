@@ -82,8 +82,11 @@ public class GameLogic extends UniversalAdapter {
                 break;
             case KeyEvent.VK_ESCAPE:
                 this.mainWindow.dispose();
+            default:
+                break;
         }
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println(e);
@@ -94,13 +97,18 @@ public class GameLogic extends UniversalAdapter {
             case ("RESTART"):
                 this.gameRestart();
                 break;
+            default:
+                break;
         }
     }
     @Override
     public void stateChanged(ChangeEvent e) {
-        this.boardSize = ((JSlider) e.getSource()).getValue();
-        this.updateBoardSizeLabel();
-        this.gameRestart();
+        JSlider source = (JSlider)e.getSource();
+        if(!source.getValueIsAdjusting()){
+            this.boardSize = ((JSlider) e.getSource()).getValue();
+            this.updateBoardSizeLabel();
+            this.gameRestart();
+        }
     }
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -108,7 +116,7 @@ public class GameLogic extends UniversalAdapter {
         if (!(current instanceof Tile)) {
             return;
         }
-        //((Tile) current).setHighlight(true);
+        ((Tile) current).setHighlight(true);
         this.currentBoard.repaint();
     }
     @Override

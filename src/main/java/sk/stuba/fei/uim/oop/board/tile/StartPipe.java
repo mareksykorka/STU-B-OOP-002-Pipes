@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class BentPipe extends Tile{
+public class StartPipe extends Tile{
 
-    public BentPipe(HashMap<Direction, Boolean> connector){
+    public StartPipe(){
         this.playable = false;
         this.highlight = false;
         this.initConnector();
