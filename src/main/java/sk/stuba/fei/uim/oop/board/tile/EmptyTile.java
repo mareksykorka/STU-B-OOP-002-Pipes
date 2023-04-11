@@ -27,8 +27,15 @@ public class EmptyTile extends Tile{
     }
 
     @Override
-    public boolean rotateTile() {
-        return false;
+    public boolean rotateTile(int amount) {
+        for (int i = 0; i < amount; i++) {
+            HashMap<Direction, Boolean> oldConnector = new HashMap<>(this.connector);
+            this.connector.put(Direction.UP,oldConnector.get(Direction.RIGHT));
+            this.connector.put(Direction.LEFT,oldConnector.get(Direction.UP));
+            this.connector.put(Direction.DOWN,oldConnector.get(Direction.LEFT));
+            this.connector.put(Direction.RIGHT,oldConnector.get(Direction.DOWN));
+        }
+        return true;
     }
 
     @Override

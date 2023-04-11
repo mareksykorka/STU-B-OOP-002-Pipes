@@ -57,7 +57,15 @@ public class GameLogic extends UniversalAdapter {
     }
 
     private void gameCheckWin() {
-        System.out.println("CheckWinActive ?");
+        if(this.currentBoard.checkWin()){
+            addLevel();
+
+            this.initializeBoard(this.boardSize);
+        } else {
+            //this.gameRestart();
+        }
+        this.mainWindow.setBoard(this.currentBoard);
+        this.mainWindow.repaint();
     }
 
     private void gameRestart() {
@@ -116,7 +124,9 @@ public class GameLogic extends UniversalAdapter {
         if (!(current instanceof Tile)) {
             return;
         }
-        ((Tile) current).setHighlight(true);
+        if(((Tile) current).getPlayable()){
+            ((Tile) current).setHighlight(true);
+        }
         this.currentBoard.repaint();
     }
     @Override
@@ -125,6 +135,11 @@ public class GameLogic extends UniversalAdapter {
         if (!(current instanceof Tile)) {
             return;
         }
-        this.addLevel();
+        if(((Tile) current).getPlayable()){
+            ((Tile) current).setHighlight(true);
+            ((Tile) current).rotateTile(1);
+        }
+        this.currentBoard.uncheck();
+        this.currentBoard.repaint();
     }
 }

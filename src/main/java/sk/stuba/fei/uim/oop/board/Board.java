@@ -4,7 +4,6 @@ import sk.stuba.fei.uim.oop.board.tile.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.DirectoryIteratorException;
 import java.util.*;
 import java.util.List;
 
@@ -126,23 +125,23 @@ public class Board extends JPanel {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (path.contains(this.board[i][j])) {
-                    if(!this.board[i][j].equals(this.startTile) && !this.board[i][j].equals(this.endTile)){
+                    if(!this.board[i][j].equals(this.startTile) || !this.board[i][j].equals(this.endTile)){
                         if(this.board[i][j] instanceof EmptyTile){
                             Tile oldTile = this.board[i][j];
                             if((((EmptyTile) this.board[i][j]).isPipeStraight())){
-                                this.board[i][j] = new StraightPipe(oldTile.getConnector());
-                                for (int k = 0; k < this.path.size(); k++) {
+                                this.board[i][j] = new StraightPipe(oldTile.getConnector(), randomGenerator);
+                                /*for (int k = 0; k < this.path.size(); k++) {
                                     if(this.path.get(k) == oldTile){
                                         this.path.set(k,this.board[i][j]);
                                     }
-                                }
+                                }*/
                             } else {
-                                this.board[i][j] = new BentPipe(oldTile.getConnector());
-                                for (int k = 0; k < this.path.size(); k++) {
+                                this.board[i][j] = new BentPipe(oldTile.getConnector(), randomGenerator);
+                                /*for (int k = 0; k < this.path.size(); k++) {
                                     if(this.path.get(k) == oldTile){
                                         this.path.set(k,this.board[i][j]);
                                     }
-                                }
+                                }*/
                             }
                         }
                     }
@@ -150,6 +149,22 @@ public class Board extends JPanel {
             }
         }
 
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i != 0) {
+                    this.board[i][j].addNeighbour(Direction.UP, this.board[i-1][j]);
+                }
+                if (i != this.board.length - 1) {
+                    this.board[i][j].addNeighbour(Direction.DOWN, this.board[i+1][j]);
+                }
+                if (j != 0) {
+                    this.board[i][j].addNeighbour(Direction.LEFT, this.board[i][j-1]);
+                }
+                if (j != this.board.length - 1) {
+                    this.board[i][j].addNeighbour(Direction.RIGHT, this.board[i][j+1]);
+                }
+            }
+        }
     }
 
     private void getStartEndTile(int size) {
@@ -192,7 +207,36 @@ public class Board extends JPanel {
         return false;
     }
 
-    private void setConnector(Tile prev, Tile current, Tile next){
+    public boolean checkWin() {
+        Stack<Tile> checkedTiles = new Stack<>();
 
+        Tile currTile = this.startTile;
+        while(currTile != null){
+            Tile nextTile = currTile.getConnectedNeighbours(checkedTiles);
+            if(nextTile == null || nextTile instanceof EmptyTile){
+                currTile.setChecked(true);
+                checkedTiles.add(currTile);
+                break;
+            }
+            if(nextTile.checkCorrectOrientation(currTile)){
+                currTile.setChecked(true);
+                checkedTiles.add(currTile);
+                currTile = nextTile;
+            } else {
+                currTile.setChecked(true);
+                checkedTiles.add(currTile);
+                break;
+            }
+        }
+
+        return checkedTiles.contains(this.endTile);
+    }
+
+    public void uncheck() {
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board.length; j++) {
+                this.board[i][j].setChecked(false);
+            }
+        }
     }
 }

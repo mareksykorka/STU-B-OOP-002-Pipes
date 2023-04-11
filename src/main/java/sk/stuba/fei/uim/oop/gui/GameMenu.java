@@ -46,7 +46,7 @@ public class GameMenu extends JPanel {
         gbc.weighty = 1.0;
         this.add(boardSizeLabel,gbc);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, GameLogic.INITIAL_BOARD_SIZE, 12, GameLogic.INITIAL_BOARD_SIZE);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 3, 12, GameLogic.INITIAL_BOARD_SIZE);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(1);
         slider.setSnapToTicks(true);
