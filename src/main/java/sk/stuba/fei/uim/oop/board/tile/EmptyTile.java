@@ -7,14 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class EmptyTile extends Tile{
+public class EmptyTile extends Tile {
     private JLabel index;
 
     @Setter
     private int pathIndex;
 
-    public EmptyTile(int i, int j){
-        this.index = new JLabel("["+i+"]"+"["+j+"]");
+    public EmptyTile(int i, int j) {
+        this.index = new JLabel("[" + i + "]" + "[" + j + "]");
         this.pathIndex = 0;
         this.add(this.index);
         this.playable = false;
@@ -22,28 +22,11 @@ public class EmptyTile extends Tile{
         this.initConnector();
         this.neighbour = new HashMap<>();
         this.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.defaultColor = Color.ORANGE;
+        this.defaultColor = new Color(135, 135, 135);
         this.setBackground(this.defaultColor);
     }
 
-    @Override
-    public boolean rotateTile(int amount) {
-        for (int i = 0; i < amount; i++) {
-            HashMap<Direction, Boolean> oldConnector = new HashMap<>(this.connector);
-            this.connector.put(Direction.UP,oldConnector.get(Direction.RIGHT));
-            this.connector.put(Direction.LEFT,oldConnector.get(Direction.UP));
-            this.connector.put(Direction.DOWN,oldConnector.get(Direction.LEFT));
-            this.connector.put(Direction.RIGHT,oldConnector.get(Direction.DOWN));
-        }
-        return true;
-    }
-
-    @Override
-    public boolean checkConnection() {
-        return false;
-    }
-
-    public boolean isPipeStraight(){
+    public boolean isPipeStraight() {
         HashMap<Direction, Direction> oppositeDirections = new HashMap<>();
         oppositeDirections.put(Direction.UP, Direction.DOWN);
         oppositeDirections.put(Direction.RIGHT, Direction.LEFT);
@@ -59,28 +42,28 @@ public class EmptyTile extends Tile{
     }
 
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Dimension dimen = this.getSize();
 
-        if(connector.get(Direction.UP)){
-            g.drawLine(dimen.width/2,0,dimen.width/2,dimen.height/2);
+        if (connector.get(Direction.UP)) {
+            g.drawLine(dimen.width / 2, 0, dimen.width / 2, dimen.height / 2);
         }
-        if(connector.get(Direction.RIGHT)){
-            g.drawLine(dimen.width,dimen.height/2,dimen.width/2,dimen.height/2);
+        if (connector.get(Direction.RIGHT)) {
+            g.drawLine(dimen.width, dimen.height / 2, dimen.width / 2, dimen.height / 2);
         }
-        if(connector.get(Direction.DOWN)){
-            g.drawLine(dimen.width/2,dimen.height,dimen.width/2,dimen.height/2);
+        if (connector.get(Direction.DOWN)) {
+            g.drawLine(dimen.width / 2, dimen.height, dimen.width / 2, dimen.height / 2);
         }
-        if(connector.get(Direction.LEFT)){
-            g.drawLine(0,dimen.height/2,dimen.width/2,dimen.height/2);
+        if (connector.get(Direction.LEFT)) {
+            g.drawLine(0, dimen.height / 2, dimen.width / 2, dimen.height / 2);
         }
 
-        if(this.highlight){
+        if (this.highlight) {
             setBackground(Color.RED);
             this.highlight = false;
         } else {
-            if(this.path) {
+            if (this.path) {
                 setBackground(Color.GREEN);
                 this.index.setText("path" + pathIndex);
             } else {

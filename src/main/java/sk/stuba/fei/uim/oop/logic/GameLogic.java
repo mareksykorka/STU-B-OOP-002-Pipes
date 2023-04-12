@@ -141,11 +141,26 @@ public class GameLogic extends UniversalAdapter {
         if (!(current instanceof Tile)) {
             return;
         }
-        if (((Tile) current).getPlayable()) {
+        if (((Tile) current).isPlayable()) {
             ((Tile) current).setHighlight(true);
-            ((Tile) current).rotateTile(1);
+            if(SwingUtilities.isRightMouseButton(e)){
+                ((Tile) current).rotateClockwise(1); // TODO: Clockvise
+            }
+            if(SwingUtilities.isLeftMouseButton(e)){
+                ((Tile) current).rotateCounterClockwise(1); // TODO: Counterclokvise
+            }
         }
         this.currentBoard.uncheck();
+        this.currentBoard.repaint();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
+        if (!(current instanceof Tile)) {
+            return;
+        }
+        ((Tile) current).setHighlight(true);
         this.currentBoard.repaint();
     }
 }
