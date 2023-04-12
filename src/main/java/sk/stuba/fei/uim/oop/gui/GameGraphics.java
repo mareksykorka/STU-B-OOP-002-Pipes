@@ -8,38 +8,52 @@ import java.awt.*;
 
 public class GameGraphics extends JFrame {
     private Board currentBoard;
+    private GridBagLayout layout;
+    private GridBagConstraints gbc;
 
-    public GameGraphics(){
-        this.setTitle("Pipes");
+    public GameGraphics() {
+        this.setTitle("Pipe Game - Marek Sykorka - 115025");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800,900);
+        this.setSize(700, 800);
         this.setResizable(false);
         this.setFocusable(true);
         this.requestFocusInWindow();
-        this.setLayout(new BorderLayout());
+
+        this.setBackground(new Color(187, 187, 187));
+        this.layout = new GridBagLayout();
+        this.setLayout(layout);
+        this.gbc = new GridBagConstraints();
+        this.gbc.fill = GridBagConstraints.BOTH;
 
         GameLogic logic = new GameLogic(this);
         this.addKeyListener(logic);
 
         GameMenu currentMenu = new GameMenu(logic);
-        this.add(currentMenu, BorderLayout.PAGE_START);
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 0;
+        this.gbc.weightx = 1.0;
+        this.gbc.weighty = 0.0;
+        this.add(currentMenu, this.gbc);
 
         this.setVisible(true);
     }
 
-    @Override
-    public void repaint(){
-        this.revalidate();
-        super.repaint();
-    }
-
-    public void setBoard(Board board){
-        if(this.currentBoard != null){
+    public void setBoard(Board board) {
+        if (this.currentBoard != null) {
             this.remove(this.currentBoard);
         }
         this.currentBoard = board;
-        this.add(board);
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 1;
+        this.gbc.weightx = 1.0;
+        this.gbc.weighty = 1.0;
+        this.add(board, this.gbc);
         this.repaint();
     }
 
+    @Override
+    public void repaint() {
+        this.revalidate();
+        super.repaint();
+    }
 }

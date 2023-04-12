@@ -20,9 +20,9 @@ public class Board extends JPanel {
         this.randomGenerator = new Random();
         this.path = new Stack<>();
         this.initializeBoard(size);
-        this.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.setBoard(size);
-        this.setBackground(Color.YELLOW);
+        this.setBackground(new Color(135,135,135));
     }
 
     private void setBoard(int size) {

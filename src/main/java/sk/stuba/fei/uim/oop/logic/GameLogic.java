@@ -37,34 +37,20 @@ public class GameLogic extends UniversalAdapter {
         this.updateLevelLabel();
     }
 
-    private void updateBoardSizeLabel() {
-        this.labelBoardSize.setText("Current board size is: " + this.boardSize);
-        this.mainWindow.repaint();
-    }
-    private void updateLevelLabel() {
-        this.labelLevel.setText("Current level: " + this.levelCounter + "   " +
-                "Number of wins: " + (this.levelCounter - 1));
-        this.mainWindow.repaint();
-    }
-    private void addLevel() {
-        this.levelCounter += 1;
-        this.updateLevelLabel();
-    }
     private void initializeBoard(int boardSize) {
         this.currentBoard = new Board(boardSize);
         this.currentBoard.addMouseMotionListener(this);
         this.currentBoard.addMouseListener(this);
     }
 
-    private void gameCheckWin() {
-        if(this.currentBoard.checkWin()){
-            addLevel();
+    private void updateBoardSizeLabel() {
+        this.labelBoardSize.setText("Current board size is: " + this.boardSize);
+        this.mainWindow.repaint();
+    }
 
-            this.initializeBoard(this.boardSize);
-        } else {
-            //this.gameRestart();
-        }
-        this.mainWindow.setBoard(this.currentBoard);
+    private void updateLevelLabel() {
+        this.labelLevel.setText("Current level: " + this.levelCounter + "   " +
+                "Number of wins: " + (this.levelCounter - 1));
         this.mainWindow.repaint();
     }
 
@@ -78,9 +64,24 @@ public class GameLogic extends UniversalAdapter {
         this.mainWindow.repaint();
     }
 
+    private void gameCheckWin() {
+        if (this.currentBoard.checkWin()) {
+            addLevel();
+            this.initializeBoard(this.boardSize);
+            this.mainWindow.setBoard(this.currentBoard);
+        } else {
+            //this.gameRestart();
+        }
+        this.mainWindow.repaint();
+    }
+
+    private void addLevel() {
+        this.levelCounter += 1;
+        this.updateLevelLabel();
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e);
         switch (e.getKeyCode()) {
             case KeyEvent.VK_R:
                 this.gameRestart();
@@ -97,45 +98,50 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e);
         switch (e.getActionCommand()) {
-            case ("CHECK PATH"):
-                this.gameCheckWin();
-                break;
             case ("RESTART"):
                 this.gameRestart();
+                break;
+            case ("CHECK PATH"):
+                this.gameCheckWin();
                 break;
             default:
                 break;
         }
     }
+
     @Override
     public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider)e.getSource();
-        if(!source.getValueIsAdjusting()){
+        JSlider source = (JSlider) e.getSource();
+        if (!source.getValueIsAdjusting()) {
             this.boardSize = ((JSlider) e.getSource()).getValue();
             this.updateBoardSizeLabel();
             this.gameRestart();
         }
     }
+
     @Override
     public void mouseMoved(MouseEvent e) {
         Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Tile)) {
             return;
         }
-        if(((Tile) current).getPlayable()){
-            ((Tile) current).setHighlight(true);
-        }
+        ((Tile) current).setHighlight(true);
         this.currentBoard.repaint();
     }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        this.mainWindow.repaint();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Tile)) {
             return;
         }
-        if(((Tile) current).getPlayable()){
+        if (((Tile) current).getPlayable()) {
             ((Tile) current).setHighlight(true);
             ((Tile) current).rotateTile(1);
         }

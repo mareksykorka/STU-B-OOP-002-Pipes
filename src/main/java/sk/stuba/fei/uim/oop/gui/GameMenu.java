@@ -6,47 +6,58 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameMenu extends JPanel {
+    private GridBagLayout layout;
+    private GridBagConstraints gbc;
+
     public GameMenu(GameLogic logic) {
-        this.setBackground(Color.LIGHT_GRAY);
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
+        this.setBackground(new Color(187, 187, 187));
+        this.layout = new GridBagLayout();
+        this.setLayout(layout);
+        this.gbc = new GridBagConstraints();
+        this.gbc.fill = GridBagConstraints.BOTH;
 
         JLabel levelLabel = logic.getLabelLevel();
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.ipadx = 10;
-        gbc.ipady = 20;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        this.add(levelLabel,gbc);
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 0;
+        this.gbc.ipadx = 5;
+        this.gbc.ipady = 8;
+        this.gbc.weightx = 0.5;
+        this.gbc.weighty = 0.5;
+        this.layout.setConstraints(levelLabel, gbc);
+        this.add(levelLabel);
 
         JButton buttonCheckWin = new JButton("CHECK PATH");
         buttonCheckWin.addActionListener(logic);
         buttonCheckWin.setFocusable(false);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        this.add(buttonCheckWin,gbc);
+        this.gbc.gridx = 1;
+        this.gbc.gridy = 0;
+        this.gbc.weightx = 0.25;
+        this.gbc.weighty = 0.5;
+        this.layout.setConstraints(buttonCheckWin, gbc);
+        this.add(buttonCheckWin);
 
         JButton buttonRestart = new JButton("RESTART");
         buttonRestart.addActionListener(logic);
         buttonRestart.setFocusable(false);
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        this.add(buttonRestart,gbc);
+        this.gbc.gridx = 2;
+        this.gbc.gridy = 0;
+        this.gbc.weightx = 0.25;
+        this.gbc.weighty = 0.5;
+        this.layout.setConstraints(buttonRestart, gbc);
+        this.add(buttonRestart);
 
         JLabel boardSizeLabel = logic.getLabelBoardSize();
         boardSizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.ipadx = 10;
-        gbc.ipady = 5;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        this.add(boardSizeLabel,gbc);
+        this.gbc.gridx = 0;
+        this.gbc.gridy = 1;
+        this.gbc.ipady = 5;
+        this.gbc.weightx = 0.5;
+        this.gbc.weighty = 0.5;
+        this.layout.setConstraints(boardSizeLabel, gbc);
+        this.add(boardSizeLabel);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 3, 12, GameLogic.INITIAL_BOARD_SIZE);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, GameLogic.INITIAL_BOARD_SIZE, 12, GameLogic.INITIAL_BOARD_SIZE);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(1);
         slider.setSnapToTicks(true);
@@ -54,9 +65,14 @@ public class GameMenu extends JPanel {
         slider.setPaintLabels(true);
         slider.addChangeListener(logic);
         slider.setFocusable(false);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        this.add(slider,gbc);
+        this.gbc.gridx = 1;
+        this.gbc.gridy = 1;
+        this.gbc.gridwidth = 2;
+        this.gbc.weightx = 0.5;
+        this.gbc.weighty = 0.5;
+        this.layout.setConstraints(slider, gbc);
+        this.add(slider);
+
+        //this.setPreferredSize(new Dimension(700,100));
     }
 }
