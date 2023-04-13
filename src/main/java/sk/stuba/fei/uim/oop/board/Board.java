@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.oop.board;
 
 import sk.stuba.fei.uim.oop.board.tile.*;
+import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +20,11 @@ public class Board extends JPanel {
         this.initializeBoard(size);
         this.generateStartEndTile(size);
         this.setNeighbours(size);
-        Stack<Tile> path = this.generatePath();
-        this.populateWithPipes(size, path);
+        this.populateWithPipes(size, this.generatePath());
         this.setNeighbours(size);
         this.setBoard(size);
 
-        this.setBackground(new Color(135, 135, 135));
+        this.setBackground(GameDefs.GRAY);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
@@ -39,25 +39,29 @@ public class Board extends JPanel {
     }
 
     private void generateStartEndTile(int size) {
-        ArrayList<Direction> edges = Direction.UP.getAllDirections();
+        ArrayList<Direction> edges = new ArrayList<>();
+        edges.add(Direction.UP);
+        edges.add(Direction.RIGHT);
+        edges.add(Direction.DOWN);
+        edges.add(Direction.LEFT);
         Collections.shuffle(edges);
 
         switch (edges.get(0)) {
             case UP:
-                this.startTile = this.board[randomGenerator.nextInt(size)][0] = new StartPipe();
-                this.endTile = this.board[randomGenerator.nextInt(size)][size - 1] = new EndPipe();
+                this.startTile = this.board[this.randomGenerator.nextInt(size)][0] = new StartPipe();
+                this.endTile = this.board[this.randomGenerator.nextInt(size)][size - 1] = new EndPipe();
                 break;
             case RIGHT:
-                this.startTile = this.board[size - 1][randomGenerator.nextInt(size)] = new StartPipe();
-                this.endTile = this.board[0][randomGenerator.nextInt(size)] = new EndPipe();
+                this.startTile = this.board[size - 1][this.randomGenerator.nextInt(size)] = new StartPipe();
+                this.endTile = this.board[0][this.randomGenerator.nextInt(size)] = new EndPipe();
                 break;
             case DOWN:
-                this.startTile = this.board[randomGenerator.nextInt(size)][size - 1] = new StartPipe();
-                this.endTile = this.board[randomGenerator.nextInt(size)][0] = new EndPipe();
+                this.startTile = this.board[this.randomGenerator.nextInt(size)][size - 1] = new StartPipe();
+                this.endTile = this.board[this.randomGenerator.nextInt(size)][0] = new EndPipe();
                 break;
             case LEFT:
-                this.startTile = this.board[0][randomGenerator.nextInt(size)] = new StartPipe();
-                this.endTile = this.board[size - 1][randomGenerator.nextInt(size)] = new EndPipe();
+                this.startTile = this.board[0][this.randomGenerator.nextInt(size)] = new StartPipe();
+                this.endTile = this.board[size - 1][this.randomGenerator.nextInt(size)] = new EndPipe();
                 break;
             default:
                 break;
@@ -71,14 +75,14 @@ public class Board extends JPanel {
         Stack<Tile> visitedTiles = new Stack<>();
         visitedTiles.add(this.startTile);
 
-        ArrayList<Tile> unusedNeighbours = new ArrayList<>();
+        ArrayList<Tile> unusedNeighbours;
 
         Tile currTile = this.startTile;
         Tile nextTile;
 
         while (currTile != this.endTile) {
             unusedNeighbours = currTile.getUnusedNeighbours(visitedTiles);
-            if (unusedNeighbours.size() > 0) {
+            if (!unusedNeighbours.isEmpty()) {
                 Collections.shuffle(unusedNeighbours);
                 nextTile = unusedNeighbours.get(0);
                 path.add(nextTile);
@@ -87,7 +91,7 @@ public class Board extends JPanel {
             } else {
                 for (int i = path.size() - 1; i > 0; i--) {
                     unusedNeighbours = path.get(i).getUnusedNeighbours(visitedTiles);
-                    if (unusedNeighbours.size() > 0) {
+                    if (!unusedNeighbours.isEmpty()) {
                         currTile = path.get(i);
                         break;
                     } else {
@@ -131,13 +135,13 @@ public class Board extends JPanel {
                 if (x != 0) {
                     this.board[x][y].addNeighbour(Direction.LEFT, this.board[x - 1][y]);
                 }
-                if (x != this.board.length - 1) {
+                if (x != size - 1) {
                     this.board[x][y].addNeighbour(Direction.RIGHT, this.board[x + 1][y]);
                 }
                 if (y != 0) {
                     this.board[x][y].addNeighbour(Direction.UP, this.board[x][y - 1]);
                 }
-                if (y != this.board.length - 1) {
+                if (y != size - 1) {
                     this.board[x][y].addNeighbour(Direction.DOWN, this.board[x][y + 1]);
                 }
             }
@@ -169,12 +173,10 @@ public class Board extends JPanel {
         return checkedTiles.contains(this.endTile);
     }
 
-    public void uncheck() {
+    public void uncheckTiles() {
         for (Tile[] tiles : this.board) {
             for (Tile tile : tiles) {
-                if(tile.isChecked()){
-                    tile.setChecked(false);
-                }
+                tile.setChecked(false);
             }
         }
     }

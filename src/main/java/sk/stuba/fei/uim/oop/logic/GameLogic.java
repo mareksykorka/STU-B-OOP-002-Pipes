@@ -151,7 +151,7 @@ public class GameLogic extends UniversalAdapter {
                 ((Tile) current).rotateCounterClockwise(1);
             }
         }
-        this.currentBoard.uncheck();
+        this.currentBoard.uncheckTiles();
         this.currentBoard.repaint();
     }
 

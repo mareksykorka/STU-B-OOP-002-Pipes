@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public enum Direction {
-    UP(0, 1),
-    DOWN(0, -1),
+    UP(0, -1),
+    DOWN(0, 1),
     LEFT(-1, 0),
     RIGHT(1, 0);
     @Getter
@@ -66,14 +66,5 @@ public enum Direction {
                 break;
         }
         return null;
-    }
-
-    public ArrayList<Direction> getAllDirections(){
-        ArrayList<Direction> edges = new ArrayList<>();
-        edges.add(UP);
-        edges.add(RIGHT);
-        edges.add(DOWN);
-        edges.add(LEFT);
-        return edges;
     }
 }
