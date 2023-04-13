@@ -16,6 +16,4 @@ public class GameDefs {
     public static final Color DARK_GRAY = new Color(108,108,108);
     public static final Color BLACK = new Color(0,0,0);
     public static final Color BLUE = new Color(0,0,200);
-
-
 }

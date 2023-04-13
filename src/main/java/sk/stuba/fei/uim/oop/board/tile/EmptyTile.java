@@ -1,16 +1,12 @@
 package sk.stuba.fei.uim.oop.board.tile;
 
-import lombok.Setter;
-import sk.stuba.fei.uim.oop.board.Direction;
+import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
 public class EmptyTile extends Tile {
-
-    @Setter
-    private int pathIndex;
 
     public EmptyTile() {
         this.playable = false;
@@ -19,9 +15,8 @@ public class EmptyTile extends Tile {
         this.initConnector();
         this.neighbour = new HashMap<>();
         this.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.setBackground(new Color(187, 187, 187));
+        this.setBackground(GameDefs.LIGHT_GRAY);
     }
-
 
     @Override
     public void paintComponent(Graphics g) {

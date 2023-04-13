@@ -99,7 +99,9 @@ public abstract class Tile extends JPanel {
         }
     }
 
-    public void paintHighlight(Graphics g){
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         Dimension dim = this.getSize();
 
@@ -109,11 +111,5 @@ public abstract class Tile extends JPanel {
             g2D.drawRect(0,0,dim.width,dim.height);
             this.highlight = false;
         }
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.paintHighlight(g);
     }
 }
