@@ -2,6 +2,9 @@ package sk.stuba.fei.uim.oop.board;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public enum Direction {
     UP(0, 1),
     DOWN(0, -1),
@@ -17,8 +20,24 @@ public enum Direction {
         this.y = y;
     }
 
-    public Direction getOpposite(Direction dir) {
-        switch (dir) {
+    public Direction getCounterClockwise() {
+        switch (this) {
+            case UP:
+                return LEFT;
+            case RIGHT:
+                return UP;
+            case DOWN:
+                return RIGHT;
+            case LEFT:
+                return DOWN;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public Direction getOpposite() {
+        switch (this) {
             case UP:
                 return DOWN;
             case RIGHT:
@@ -31,5 +50,30 @@ public enum Direction {
                 break;
         }
         return null;
+    }
+
+    public Direction getClockwise() {
+        switch (this) {
+            case UP:
+                return RIGHT;
+            case RIGHT:
+                return DOWN;
+            case DOWN:
+                return LEFT;
+            case LEFT:
+                return UP;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public ArrayList<Direction> getAllDirections(){
+        ArrayList<Direction> edges = new ArrayList<>();
+        edges.add(UP);
+        edges.add(RIGHT);
+        edges.add(DOWN);
+        edges.add(LEFT);
+        return edges;
     }
 }

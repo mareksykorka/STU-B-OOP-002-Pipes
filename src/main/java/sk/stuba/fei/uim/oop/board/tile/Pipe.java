@@ -7,14 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.HashMap;
+import java.util.Random;
 
-public class StartPipe extends Tile {
+public class Pipe extends Tile {
 
-    public StartPipe() {
-        this.playable = false;
+    public Pipe(HashMap<Direction, Boolean> connector, Random randomGenerator) {
+        this.playable = true;
         this.highlight = false;
         this.checked = false;
-        this.initConnector();
+        this.connector = connector;
+        this.rotateClockwise(randomGenerator.nextInt(4));
         this.neighbour = new HashMap<>();
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.setBackground(new Color(187, 187, 187));
@@ -94,6 +96,7 @@ public class StartPipe extends Tile {
             g2D.draw(new Line2D.Float(0, dim.height / 2, dim.width / 2, dim.height / 2));
         }
 
+        if(this.checked) {
             if (connector.get(Direction.UP)) {
                 g2D.setStroke(new BasicStroke((float) (dim.width * 0.2)));
                 g2D.setColor(GameDefs.BLUE);
@@ -114,5 +117,6 @@ public class StartPipe extends Tile {
                 g2D.setColor(GameDefs.BLUE);
                 g2D.draw(new Line2D.Float(0, dim.height / 2, dim.width / 2, dim.height / 2));
             }
+        }
     }
 }

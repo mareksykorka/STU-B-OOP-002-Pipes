@@ -4,6 +4,7 @@ import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.Board;
 import sk.stuba.fei.uim.oop.board.tile.Tile;
 import sk.stuba.fei.uim.oop.gui.GameGraphics;
+import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -25,7 +26,7 @@ public class GameLogic extends UniversalAdapter {
 
     public GameLogic(GameGraphics gameGraphics) {
         this.mainWindow = gameGraphics;
-        this.boardSize = INITIAL_BOARD_SIZE;
+        this.boardSize = this.INITIAL_BOARD_SIZE;
         this.initializeBoard(this.boardSize);
         this.mainWindow.setBoard(this.currentBoard);
 
@@ -66,7 +67,7 @@ public class GameLogic extends UniversalAdapter {
 
     private void gameCheckWin() {
         if (this.currentBoard.checkWin()) {
-            addLevel();
+            this.addLevel();
             this.initializeBoard(this.boardSize);
             this.mainWindow.setBoard(this.currentBoard);
         } else {
@@ -99,10 +100,10 @@ public class GameLogic extends UniversalAdapter {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case ("RESTART"):
+            case (GameDefs.RESTART_BUTTON):
                 this.gameRestart();
                 break;
-            case ("CHECK PATH"):
+            case (GameDefs.CHECK_BUTTON):
                 this.gameCheckWin();
                 break;
             default:
@@ -143,11 +144,11 @@ public class GameLogic extends UniversalAdapter {
         }
         if (((Tile) current).isPlayable()) {
             ((Tile) current).setHighlight(true);
-            if(SwingUtilities.isRightMouseButton(e)){
-                ((Tile) current).rotateClockwise(1); // TODO: Clockvise
+            if (SwingUtilities.isRightMouseButton(e)) {
+                ((Tile) current).rotateClockwise(1);
             }
-            if(SwingUtilities.isLeftMouseButton(e)){
-                ((Tile) current).rotateCounterClockwise(1); // TODO: Counterclokvise
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                ((Tile) current).rotateCounterClockwise(1);
             }
         }
         this.currentBoard.uncheck();

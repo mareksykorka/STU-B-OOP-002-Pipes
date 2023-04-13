@@ -2,13 +2,13 @@ package sk.stuba.fei.uim.oop.gui;
 
 import sk.stuba.fei.uim.oop.board.Board;
 import sk.stuba.fei.uim.oop.logic.GameLogic;
+import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameGraphics extends JFrame {
     private Board currentBoard;
-    private GridBagLayout layout;
     private GridBagConstraints gbc;
 
     public GameGraphics() {
@@ -19,9 +19,8 @@ public class GameGraphics extends JFrame {
         this.setFocusable(true);
         this.requestFocusInWindow();
 
-        this.setBackground(new Color(187, 187, 187));
-        this.layout = new GridBagLayout();
-        this.setLayout(layout);
+        this.setBackground(GameDefs.LIGHT_GRAY);
+        this.setLayout(new GridBagLayout());
         this.gbc = new GridBagConstraints();
         this.gbc.fill = GridBagConstraints.BOTH;
 

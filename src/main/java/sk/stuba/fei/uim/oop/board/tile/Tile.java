@@ -6,21 +6,20 @@ import sk.stuba.fei.uim.oop.board.Direction;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
-public abstract class Tile extends JPanel {
+import static java.lang.Math.atan2;
 
-    //Debug
-    protected Color defaultColor;
+public abstract class Tile extends JPanel {
     @Getter
     protected boolean playable;
-    @Setter
+    @Getter @Setter
     protected boolean highlight;
-    @Setter
+    @Getter @Setter
     protected boolean checked;
-    @Setter
-    protected boolean path;
     @Getter
     protected HashMap<Direction, Boolean> connector;
     @Getter
@@ -69,6 +68,17 @@ public abstract class Tile extends JPanel {
         return outTile;
     }
 
+    public ArrayList<Tile> getUnusedNeighbours(Stack<Tile> visitedTiles){
+        ArrayList<Tile> neighboursList = new ArrayList<>(this.neighbour.values());
+        ArrayList<Tile> unusedNeighboursList = new ArrayList<>();
+        for (Tile tile : neighboursList) {
+            if (!visitedTiles.contains(tile)) {
+                unusedNeighboursList.add(tile);
+            }
+        }
+        return unusedNeighboursList;
+    }
+
     public void rotateClockwise(int amount) {
         for (int i = 0; i < amount; i++) {
             HashMap<Direction, Boolean> oldConnector = new HashMap<>(this.connector);
@@ -87,5 +97,23 @@ public abstract class Tile extends JPanel {
             this.connector.put(Direction.DOWN, oldConnector.get(Direction.LEFT));
             this.connector.put(Direction.RIGHT, oldConnector.get(Direction.DOWN));
         }
+    }
+
+    public void paintHighlight(Graphics g){
+        Graphics2D g2D = (Graphics2D) g;
+        Dimension dim = this.getSize();
+
+        if (this.highlight) {
+            g2D.setStroke(new BasicStroke((float) (dim.width*0.2)));
+            g2D.setColor(Color.RED);
+            g2D.drawRect(0,0,dim.width,dim.height);
+            this.highlight = false;
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        this.paintHighlight(g);
     }
 }
