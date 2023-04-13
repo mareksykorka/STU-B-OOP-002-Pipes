@@ -3,22 +3,23 @@ package sk.stuba.fei.uim.oop.board.tile;
 import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.Direction;
+import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Stack;
-
-import static java.lang.Math.atan2;
 
 public abstract class Tile extends JPanel {
     @Getter
     protected boolean playable;
-    @Getter @Setter
+    @Getter
+    @Setter
     protected boolean highlight;
-    @Getter @Setter
+    @Getter
+    @Setter
     protected boolean checked;
     @Getter
     protected HashMap<Direction, Boolean> connector;
@@ -68,7 +69,7 @@ public abstract class Tile extends JPanel {
         return outTile;
     }
 
-    public ArrayList<Tile> getUnusedNeighbours(Stack<Tile> visitedTiles){
+    public ArrayList<Tile> getUnusedNeighbours(Stack<Tile> visitedTiles) {
         ArrayList<Tile> neighboursList = new ArrayList<>(this.neighbour.values());
         ArrayList<Tile> unusedNeighboursList = new ArrayList<>();
         for (Tile tile : neighboursList) {
@@ -106,10 +107,96 @@ public abstract class Tile extends JPanel {
         Dimension dim = this.getSize();
 
         if (this.highlight) {
-            g2D.setStroke(new BasicStroke((float) (dim.width*0.2)));
-            g2D.setColor(Color.RED);
-            g2D.drawRect(0,0,dim.width,dim.height);
+            if(this.playable){
+                g2D.setColor(GameDefs.HIGHLIGHT_PLAYABLE);
+            } else {
+                g2D.setColor(GameDefs.HIGHLIGHT_NON_PLAYABLE);
+            }
+            g2D.setStroke(new BasicStroke((float) (dim.width * 0.2)));
+            g2D.drawRect(0, 0, dim.width, dim.height);
             this.highlight = false;
+        }
+    }
+
+    protected void paintPipe(Graphics2D g2D, Dimension dim) {
+        BasicStroke pipeWall = new BasicStroke((float) (dim.width * 0.32));
+        BasicStroke pipeIn = new BasicStroke((float) (dim.width * 0.25));
+        float xCenter = (float) dim.width / 2;
+        float yCenter = (float) dim.height / 2;
+        float xPipeEndWidth = (float) dim.width / 8;
+        float yPipeEndWidth = (float) dim.height / 8;
+
+        g2D.setColor(GameDefs.BLACK);
+        g2D.setStroke(pipeWall);
+        if (connector.get(Direction.UP)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
+            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
+        }
+        if (connector.get(Direction.RIGHT)) {
+            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
+        }
+        if (connector.get(Direction.DOWN)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
+            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
+        }
+        if (connector.get(Direction.LEFT)) {
+            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
+        }
+
+
+        g2D.setColor(GameDefs.DARK_GRAY);
+        g2D.setStroke(pipeIn);
+        if (connector.get(Direction.UP)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
+            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
+        }
+        if (connector.get(Direction.RIGHT)) {
+            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
+        }
+        if (connector.get(Direction.DOWN)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
+            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
+        }
+        if (connector.get(Direction.LEFT)) {
+            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
+        }
+    }
+
+    protected void paintWater(Graphics2D g2D, Dimension dim) {
+        BasicStroke water = new BasicStroke((float) (dim.width * 0.2));
+        float xCenter = (float) dim.width / 2;
+        float yCenter = (float) dim.height / 2;
+
+        g2D.setColor(GameDefs.BLUE);
+        g2D.setStroke(water);
+        if (connector.get(Direction.UP)) {
+            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
+        }
+        if (connector.get(Direction.RIGHT)) {
+            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
+        }
+        if (connector.get(Direction.DOWN)) {
+            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
+        }
+        if (connector.get(Direction.LEFT)) {
+            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
+        }
+    }
+
+    protected void paintPipeEnd(Graphics2D g2D, Dimension dim, boolean water) {
+        g2D.setColor(GameDefs.BLACK);
+        g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1-2*0.2)), (int) (dim.height * (1-2*0.2)));
+
+        g2D.setColor(GameDefs.DARK_GRAY);
+        g2D.fillRect((int) (dim.width * 0.23), (int) (dim.height * 0.23), (int) (dim.width * (1-2*0.23)), (int) (dim.height * (1-2*0.23)));
+
+        if (water){
+            g2D.setColor(GameDefs.BLUE);
+            g2D.fillRect((int) (dim.width * 0.26), (int) (dim.height * 0.26), (int) (dim.width * (1-2*0.26)), (int) (dim.height * (1-2*0.26)));
         }
     }
 }
