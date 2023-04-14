@@ -28,6 +28,33 @@ public class Board extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
+    private void setBoard(int size) {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                this.add(board[x][y]);
+            }
+        }
+    }
+
+    private void setNeighbours(int size) {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (x != 0) {
+                    this.board[x][y].addNeighbour(Direction.LEFT, this.board[x - 1][y]);
+                }
+                if (x != size - 1) {
+                    this.board[x][y].addNeighbour(Direction.RIGHT, this.board[x + 1][y]);
+                }
+                if (y != 0) {
+                    this.board[x][y].addNeighbour(Direction.UP, this.board[x][y - 1]);
+                }
+                if (y != size - 1) {
+                    this.board[x][y].addNeighbour(Direction.DOWN, this.board[x][y + 1]);
+                }
+            }
+        }
+    }
+
     private void initializeBoard(int size) {
         this.board = new Tile[size][size];
 
@@ -116,33 +143,6 @@ public class Board extends JPanel {
                     if (this.board[x][y] instanceof EmptyTile) {
                         this.board[x][y] = new Pipe(this.board[x][y].getConnector(), randomGenerator);
                     }
-                }
-            }
-        }
-    }
-
-    private void setBoard(int size) {
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                this.add(board[x][y]);
-            }
-        }
-    }
-
-    private void setNeighbours(int size) {
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                if (x != 0) {
-                    this.board[x][y].addNeighbour(Direction.LEFT, this.board[x - 1][y]);
-                }
-                if (x != size - 1) {
-                    this.board[x][y].addNeighbour(Direction.RIGHT, this.board[x + 1][y]);
-                }
-                if (y != 0) {
-                    this.board[x][y].addNeighbour(Direction.UP, this.board[x][y - 1]);
-                }
-                if (y != size - 1) {
-                    this.board[x][y].addNeighbour(Direction.DOWN, this.board[x][y + 1]);
                 }
             }
         }

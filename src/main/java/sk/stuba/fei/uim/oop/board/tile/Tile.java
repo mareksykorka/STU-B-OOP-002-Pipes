@@ -26,33 +26,12 @@ public abstract class Tile extends JPanel {
     @Getter
     protected HashMap<Direction, Tile> neighbour;
 
-    protected void initConnector() {
-        this.connector = new HashMap<>();
-        this.connector.put(Direction.UP, false);
-        this.connector.put(Direction.LEFT, false);
-        this.connector.put(Direction.DOWN, false);
-        this.connector.put(Direction.RIGHT, false);
-    }
-
     public void setConnector(Tile tile) {
         for (Direction dir : this.neighbour.keySet()) {
             if (this.neighbour.get(dir).equals(tile)) {
                 this.connector.put(dir, true);
             }
         }
-    }
-
-    public boolean checkCorrectOrientation(Tile prevTile) {
-        for (Direction dir : this.neighbour.keySet()) {
-            if (this.neighbour.get(dir).equals(prevTile)) {
-                return this.connector.get(dir);
-            }
-        }
-        return false;
-    }
-
-    public void addNeighbour(Direction dir, Tile tile) {
-        this.neighbour.put(dir, tile);
     }
 
     public Tile getConnectedNeighbour(Stack<Tile> checkedTiles) {
@@ -78,6 +57,27 @@ public abstract class Tile extends JPanel {
             }
         }
         return unusedNeighboursList;
+    }
+
+    protected void initConnector() {
+        this.connector = new HashMap<>();
+        this.connector.put(Direction.UP, false);
+        this.connector.put(Direction.LEFT, false);
+        this.connector.put(Direction.DOWN, false);
+        this.connector.put(Direction.RIGHT, false);
+    }
+
+    public boolean checkCorrectOrientation(Tile prevTile) {
+        for (Direction dir : this.neighbour.keySet()) {
+            if (this.neighbour.get(dir).equals(prevTile)) {
+                return this.connector.get(dir);
+            }
+        }
+        return false;
+    }
+
+    public void addNeighbour(Direction dir, Tile tile) {
+        this.neighbour.put(dir, tile);
     }
 
     public void rotateClockwise(int amount) {
@@ -107,7 +107,7 @@ public abstract class Tile extends JPanel {
         Dimension dim = this.getSize();
 
         if (this.highlight) {
-            if(this.playable){
+            if (this.playable) {
                 g2D.setColor(GameDefs.HIGHLIGHT_PLAYABLE);
             } else {
                 g2D.setColor(GameDefs.HIGHLIGHT_NON_PLAYABLE);
@@ -128,42 +128,11 @@ public abstract class Tile extends JPanel {
 
         g2D.setColor(GameDefs.BLACK);
         g2D.setStroke(pipeWall);
-        if (connector.get(Direction.UP)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
-            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
-        }
-        if (connector.get(Direction.RIGHT)) {
-            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
-        }
-        if (connector.get(Direction.DOWN)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
-            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
-        }
-        if (connector.get(Direction.LEFT)) {
-            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
-        }
-
+        paintSection(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
 
         g2D.setColor(GameDefs.DARK_GRAY);
         g2D.setStroke(pipeIn);
-        if (connector.get(Direction.UP)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
-            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
-        }
-        if (connector.get(Direction.RIGHT)) {
-            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
-        }
-        if (connector.get(Direction.DOWN)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
-            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
-        }
-        if (connector.get(Direction.LEFT)) {
-            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
-        }
+        paintSection(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
     }
 
     protected void paintWater(Graphics2D g2D, Dimension dim) {
@@ -189,14 +158,33 @@ public abstract class Tile extends JPanel {
 
     protected void paintPipeEnd(Graphics2D g2D, Dimension dim, boolean water) {
         g2D.setColor(GameDefs.BLACK);
-        g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1-2*0.2)), (int) (dim.height * (1-2*0.2)));
+        g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1 - 2 * 0.2)), (int) (dim.height * (1 - 2 * 0.2)));
 
         g2D.setColor(GameDefs.DARK_GRAY);
-        g2D.fillRect((int) (dim.width * 0.23), (int) (dim.height * 0.23), (int) (dim.width * (1-2*0.23)), (int) (dim.height * (1-2*0.23)));
+        g2D.fillRect((int) (dim.width * 0.23), (int) (dim.height * 0.23), (int) (dim.width * (1 - 2 * 0.23)), (int) (dim.height * (1 - 2 * 0.23)));
 
-        if (water){
+        if (water) {
             g2D.setColor(GameDefs.BLUE);
-            g2D.fillRect((int) (dim.width * 0.26), (int) (dim.height * 0.26), (int) (dim.width * (1-2*0.26)), (int) (dim.height * (1-2*0.26)));
+            g2D.fillRect((int) (dim.width * 0.26), (int) (dim.height * 0.26), (int) (dim.width * (1 - 2 * 0.26)), (int) (dim.height * (1 - 2 * 0.26)));
+        }
+    }
+
+    private void paintSection(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xPipeEndWidth, float yPipeEndWidth) {
+        if (connector.get(Direction.UP)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
+            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
+        }
+        if (connector.get(Direction.RIGHT)) {
+            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
+        }
+        if (connector.get(Direction.DOWN)) {
+            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
+            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
+        }
+        if (connector.get(Direction.LEFT)) {
+            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
+            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
         }
     }
 }

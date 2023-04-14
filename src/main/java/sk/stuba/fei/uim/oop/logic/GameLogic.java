@@ -70,8 +70,6 @@ public class GameLogic extends UniversalAdapter {
             this.addLevel();
             this.initializeBoard(this.boardSize);
             this.mainWindow.setBoard(this.currentBoard);
-        } else {
-            //this.gameRestart();
         }
         this.mainWindow.repaint();
     }
@@ -142,8 +140,8 @@ public class GameLogic extends UniversalAdapter {
         if (!(current instanceof Tile)) {
             return;
         }
+        ((Tile) current).setHighlight(true);
         if (((Tile) current).isPlayable()) {
-            ((Tile) current).setHighlight(true);
             if (SwingUtilities.isRightMouseButton(e)) {
                 ((Tile) current).rotateClockwise(1);
             }

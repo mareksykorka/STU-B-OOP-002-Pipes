@@ -12,13 +12,12 @@ public class GameGraphics extends JFrame {
     private GridBagConstraints gbc;
 
     public GameGraphics() {
-        this.setTitle("Pipe Game - Marek Sykorka - 115025");
+        this.setTitle("Pipe Game - Marek Sýkorka - 115025");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(700, 800);
         this.setResizable(false);
         this.setFocusable(true);
         this.requestFocusInWindow();
-
         this.setBackground(GameDefs.LIGHT_GRAY);
         this.setLayout(new GridBagLayout());
         this.gbc = new GridBagConstraints();

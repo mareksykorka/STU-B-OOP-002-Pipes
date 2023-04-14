@@ -5,7 +5,6 @@ import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -29,8 +28,7 @@ public class Pipe extends Tile {
         Dimension dim = this.getSize();
 
         this.paintPipe(g2D, dim);
-
-        if(this.checked) {
+        if (this.checked) {
             this.paintWater(g2D, dim);
         }
     }

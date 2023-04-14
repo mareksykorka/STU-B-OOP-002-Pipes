@@ -1,11 +1,9 @@
 package sk.stuba.fei.uim.oop.board.tile;
 
-import sk.stuba.fei.uim.oop.board.Direction;
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.HashMap;
 
 public class StartPipe extends Tile {
