@@ -15,11 +15,9 @@ import java.util.Stack;
 public abstract class Tile extends JPanel {
     @Getter
     protected boolean playable;
-    @Getter
-    @Setter
+    @Getter @Setter
     protected boolean highlight;
-    @Getter
-    @Setter
+    @Getter @Setter
     protected boolean checked;
     @Getter
     protected HashMap<Direction, Boolean> connector;
