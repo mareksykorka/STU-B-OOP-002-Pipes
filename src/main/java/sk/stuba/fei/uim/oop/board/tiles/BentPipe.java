@@ -1,19 +1,23 @@
-package sk.stuba.fei.uim.oop.board.tile;
+package sk.stuba.fei.uim.oop.board.tiles;
 
+import sk.stuba.fei.uim.oop.board.Direction;
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.Random;
 
-public class StartPipe extends Tile {
-
-    public StartPipe() {
-        this.playable = false;
+public class BentPipe extends Tile {
+    public BentPipe(Random randomGenerator) {
+        this.playable = true;
         this.highlight = false;
         this.checked = false;
+
         this.initConnector();
-        this.neighbour = new HashMap<>();
+        this.connector.put(Direction.UP, true);
+        this.connector.put(Direction.RIGHT, true);
+        this.rotateClockwise(randomGenerator.nextInt(4));
+
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.setBackground(GameDefs.LIGHT_GRAY);
     }
@@ -24,8 +28,9 @@ public class StartPipe extends Tile {
         Graphics2D g2D = (Graphics2D) g;
         Dimension dim = this.getSize();
 
-        this.paintPipeEnd(g2D, dim, true);
         this.paintPipe(g2D, dim);
-        this.paintWater(g2D, dim);
+        if (this.checked) {
+            this.paintWater(g2D, dim);
+        }
     }
 }

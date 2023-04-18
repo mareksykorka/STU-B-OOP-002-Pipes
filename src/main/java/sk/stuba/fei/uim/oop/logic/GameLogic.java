@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.oop.logic;
 
 import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.Board;
-import sk.stuba.fei.uim.oop.board.tile.Tile;
+import sk.stuba.fei.uim.oop.board.tiles.Tile;
 import sk.stuba.fei.uim.oop.gui.GameGraphics;
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 

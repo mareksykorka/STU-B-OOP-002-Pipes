@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.oop.board.tile;
+package sk.stuba.fei.uim.oop.board.tiles;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,54 +8,19 @@ import sk.stuba.fei.uim.oop.utility.GameDefs;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 public abstract class Tile extends JPanel {
     @Getter
     protected boolean playable;
-    @Getter @Setter
+    @Getter
+    @Setter
     protected boolean highlight;
-    @Getter @Setter
+    @Getter
+    @Setter
     protected boolean checked;
     @Getter
     protected HashMap<Direction, Boolean> connector;
-    @Getter
-    protected HashMap<Direction, Tile> neighbour;
-
-    public void setConnector(Tile tile) {
-        for (Direction dir : this.neighbour.keySet()) {
-            if (this.neighbour.get(dir).equals(tile)) {
-                this.connector.put(dir, true);
-            }
-        }
-    }
-
-    public Tile getConnectedNeighbour(Stack<Tile> checkedTiles) {
-        Tile outTile = null;
-        for (Direction dir : this.connector.keySet()) {
-            if (this.connector.get(dir)) {
-                if (checkedTiles.isEmpty()) {
-                    outTile = this.neighbour.get(dir);
-                } else if (!checkedTiles.contains(this.neighbour.get(dir))) {
-                    outTile = this.neighbour.get(dir);
-                }
-            }
-        }
-        return outTile;
-    }
-
-    public ArrayList<Tile> getUnusedNeighbours(Stack<Tile> visitedTiles) {
-        ArrayList<Tile> neighboursList = new ArrayList<>(this.neighbour.values());
-        ArrayList<Tile> unusedNeighboursList = new ArrayList<>();
-        for (Tile tile : neighboursList) {
-            if (!visitedTiles.contains(tile)) {
-                unusedNeighboursList.add(tile);
-            }
-        }
-        return unusedNeighboursList;
-    }
 
     protected void initConnector() {
         this.connector = new HashMap<>();
@@ -63,19 +28,6 @@ public abstract class Tile extends JPanel {
         this.connector.put(Direction.LEFT, false);
         this.connector.put(Direction.DOWN, false);
         this.connector.put(Direction.RIGHT, false);
-    }
-
-    public boolean checkCorrectOrientation(Tile prevTile) {
-        for (Direction dir : this.neighbour.keySet()) {
-            if (this.neighbour.get(dir).equals(prevTile)) {
-                return this.connector.get(dir);
-            }
-        }
-        return false;
-    }
-
-    public void addNeighbour(Direction dir, Tile tile) {
-        this.neighbour.put(dir, tile);
     }
 
     public void rotateClockwise(int amount) {

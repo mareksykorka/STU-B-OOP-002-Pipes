@@ -1,19 +1,24 @@
-package sk.stuba.fei.uim.oop.board.tile;
+package sk.stuba.fei.uim.oop.board.tiles;
 
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 
-public class EndPipe extends Tile {
+public class EmptyTile extends Tile {
 
-    public EndPipe() {
+    JLabel label;
+
+    public EmptyTile(int x, int y) {
         this.playable = false;
         this.highlight = false;
         this.checked = false;
+
         this.initConnector();
-        this.neighbour = new HashMap<>();
+
+        this.label = new JLabel("[" + x + "][" + y + "]");
+        this.add(label);
+
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.setBackground(GameDefs.LIGHT_GRAY);
     }
@@ -21,10 +26,5 @@ public class EndPipe extends Tile {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2D = (Graphics2D) g;
-        Dimension dim = this.getSize();
-
-        this.paintPipeEnd(g2D, dim, false);
-        this.paintPipe(g2D, dim);
     }
 }
