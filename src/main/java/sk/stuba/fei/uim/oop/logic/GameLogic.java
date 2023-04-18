@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
-    public static final int INITIAL_BOARD_SIZE = 8;
     private GameGraphics mainWindow;
     @Getter
     private JLabel labelBoardSize;
@@ -26,7 +25,7 @@ public class GameLogic extends UniversalAdapter {
 
     public GameLogic(GameGraphics gameGraphics) {
         this.mainWindow = gameGraphics;
-        this.boardSize = this.INITIAL_BOARD_SIZE;
+        this.boardSize = GameDefs.INITIAL_BOARD_SIZE;
         this.initializeBoard(this.boardSize);
         this.mainWindow.setBoard(this.currentBoard);
 

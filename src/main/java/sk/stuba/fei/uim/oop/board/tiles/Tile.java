@@ -13,13 +13,10 @@ import java.util.HashMap;
 public abstract class Tile extends JPanel {
     @Getter
     protected boolean playable;
-    @Getter
     @Setter
     protected boolean highlight;
-    @Getter
     @Setter
     protected boolean checked;
-    @Getter
     protected HashMap<Direction, Boolean> connector;
 
     protected void initConnector() {
@@ -28,6 +25,26 @@ public abstract class Tile extends JPanel {
         this.connector.put(Direction.LEFT, false);
         this.connector.put(Direction.DOWN, false);
         this.connector.put(Direction.RIGHT, false);
+    }
+
+    public boolean checkCorrectOrientation() {
+        /*for (Direction dir : this.neighbour.keySet()) {
+            if (this.neighbour.get(dir).equals(prevTile)) {
+                return this.connector.get(dir);
+            }
+        }*/
+        return false;
+    }
+
+    public Direction getNextDirection(Direction checkedDirection) {
+        for (Direction dir : this.connector.keySet()) {
+            if (dir != checkedDirection) {
+                if (this.connector.get(dir)) {
+                    return dir;
+                }
+            }
+        }
+        return null;
     }
 
     public void rotateClockwise(int amount) {

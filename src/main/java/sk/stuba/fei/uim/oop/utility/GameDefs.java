@@ -9,7 +9,9 @@ public class GameDefs {
     public static final String CHECK_BUTTON = "CHECK PATH";
 
     public static final int MAX_BOARD_SIZE = 12;
-    public static final int MIN_BOARD_SIZE = GameLogic.INITIAL_BOARD_SIZE;
+
+    public static final int INITIAL_BOARD_SIZE = 8;
+    public static final int MIN_BOARD_SIZE = INITIAL_BOARD_SIZE;
 
     public static final Color LIGHT_GRAY = new Color(187, 187, 187);
     public static final Color GRAY = new Color(135, 135, 135);

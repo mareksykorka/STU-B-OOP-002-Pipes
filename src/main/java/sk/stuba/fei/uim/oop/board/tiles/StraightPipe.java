@@ -8,7 +8,6 @@ import java.awt.*;
 import java.util.Random;
 
 public class StraightPipe extends Tile {
-
     public StraightPipe(Random randomGenerator) {
         this.playable = true;
         this.highlight = false;
