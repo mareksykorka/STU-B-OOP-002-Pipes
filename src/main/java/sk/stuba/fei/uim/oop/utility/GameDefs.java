@@ -1,7 +1,5 @@
 package sk.stuba.fei.uim.oop.utility;
 
-import sk.stuba.fei.uim.oop.logic.GameLogic;
-
 import java.awt.*;
 
 public class GameDefs {

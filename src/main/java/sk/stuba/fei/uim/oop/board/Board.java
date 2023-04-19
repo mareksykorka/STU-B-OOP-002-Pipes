@@ -110,11 +110,10 @@ public class Board extends JPanel {
     }
 
     private ArrayList<Node> getNonVisitedNodes(Node node, Node[][] nodes) {
-        int nextX, nextY;
         ArrayList<Node> nonVisitedNeighbours = new ArrayList<>();
         for (Direction dir : this.allDirections) {
-            nextX = node.getX() + dir.getX();
-            nextY = node.getY() + dir.getY();
+            int nextX = node.getX() + dir.getX();
+            int nextY = node.getY() + dir.getY();
             if (isInBounds(nextX) && isInBounds(nextY)) {
                 if (!nodes[nextX][nextY].isVisited()) {
                     nonVisitedNeighbours.add(nodes[nextX][nextY]);
@@ -133,21 +132,26 @@ public class Board extends JPanel {
         this.board = new Tile[this.boardSize][this.boardSize];
 
         for (int i = 0; i < dfsPath.size(); i++) {
-            if (dfsPath.get(i).isStart()) {
-                this.startTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(true, this.getDirection(dfsPath.get(i), dfsPath.get(i + 1)));
-            } else if (dfsPath.get(i).isFinish()) {
-                this.endTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(false, this.getDirection(dfsPath.get(i), dfsPath.get(i - 1)));
+            Node currNode = dfsPath.get(i);
+            int boardX = currNode.getX();
+            int boardY = currNode.getY();
+            if (currNode.isStart()) {
+                this.board[boardX][boardY] = new StartEndPipe(true, this.getDirection(currNode, dfsPath.get(i + 1)));
+                this.startTile = this.board[boardX][boardY];
+            } else if (currNode.isFinish()) {
+                this.board[boardX][boardY] = new StartEndPipe(false, this.getDirection(currNode, dfsPath.get(i - 1)));
+                this.endTile = this.board[boardX][boardY];
             } else if (this.isStraight(dfsPath.get(i - 1), dfsPath.get(i + 1))) {
-                this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StraightPipe(this.randomGenerator);
+                this.board[boardX][boardY] = new StraightPipe(this.randomGenerator);
             } else {
-                this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new BentPipe(this.randomGenerator);
+                this.board[boardX][boardY] = new BentPipe(this.randomGenerator);
             }
         }
 
         for (int y = 0; y < this.boardSize; y++) {
             for (int x = 0; x < this.boardSize; x++) {
                 if (this.board[x][y] == null) {
-                    this.board[x][y] = new EmptyTile(x, y);
+                    this.board[x][y] = new EmptyTile();
                 }
             }
         }
@@ -173,7 +177,7 @@ public class Board extends JPanel {
         if (dirX == Direction.LEFT.getX() && dirY == Direction.LEFT.getY()) {
             return Direction.LEFT;
         }
-        return null;
+        return Direction.NULL;
     }
 
     private void setBoard(int size) {

@@ -6,7 +6,8 @@ public enum Direction {
     UP(0, -1),
     DOWN(0, 1),
     LEFT(-1, 0),
-    RIGHT(1, 0);
+    RIGHT(1, 0),
+    NULL(0, 0);
     @Getter
     private int x;
     @Getter
@@ -17,24 +18,18 @@ public enum Direction {
         this.y = y;
     }
 
-    public Direction getOppositeDirection(){
-        Direction outDirection = null;
-        switch (this){
+    public Direction getOppositeDirection() {
+        switch (this) {
             case UP:
-                outDirection = DOWN;
-                break;
+                return DOWN;
             case RIGHT:
-                outDirection = LEFT;
-                break;
+                return LEFT;
             case DOWN:
-                outDirection = UP;
-                break;
+                return UP;
             case LEFT:
-                outDirection = RIGHT;
-                break;
+                return RIGHT;
             default:
-                break;
+                return NULL;
         }
-        return outDirection;
     }
 }

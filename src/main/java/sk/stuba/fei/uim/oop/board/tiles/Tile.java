@@ -20,6 +20,12 @@ public abstract class Tile extends JPanel {
     @Getter
     protected HashMap<Direction, Boolean> connector;
 
+    protected Tile() {
+        this.initConnector();
+        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        this.setBackground(GameDefs.LIGHT_GRAY);
+    }
+
     protected void initConnector() {
         this.connector = new HashMap<>();
         this.connector.put(Direction.UP, false);
