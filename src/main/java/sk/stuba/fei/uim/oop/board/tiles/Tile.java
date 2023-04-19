@@ -159,4 +159,20 @@ public abstract class Tile extends JPanel {
             g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
         }
     }
+
+    /*
+    private void paintStrokeLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xPipeEndWidth, float yPipeEndWidth) {
+        if (connector.get(Direction.UP)) {
+
+        }
+        if (connector.get(Direction.RIGHT)) {
+
+        }
+        if (connector.get(Direction.DOWN)) {
+
+        }
+        if (connector.get(Direction.LEFT)) {
+
+        }
+    }*/
 }

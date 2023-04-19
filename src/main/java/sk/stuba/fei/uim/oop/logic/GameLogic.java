@@ -27,7 +27,7 @@ public class GameLogic extends UniversalAdapter {
         this.mainWindow = gameGraphics;
         this.boardSize = GameDefs.INITIAL_BOARD_SIZE;
         this.initializeBoard(this.boardSize);
-        this.mainWindow.setBoard(this.currentBoard);
+        this.mainWindow.replaceBoard(this.currentBoard);
 
         this.labelBoardSize = new JLabel();
         this.updateBoardSizeLabel();
@@ -35,6 +35,8 @@ public class GameLogic extends UniversalAdapter {
         this.levelCounter = 1;
         this.labelLevel = new JLabel();
         this.updateLevelLabel();
+
+        this.mainWindow.repaint();
     }
 
     private void initializeBoard(int boardSize) {
@@ -45,35 +47,32 @@ public class GameLogic extends UniversalAdapter {
 
     private void updateBoardSizeLabel() {
         this.labelBoardSize.setText("Current board size is: " + this.boardSize);
-        this.mainWindow.repaint();
     }
 
     private void updateLevelLabel() {
-        this.labelLevel.setText("Current level: " + this.levelCounter + "   " +
-                "Number of wins: " + (this.levelCounter - 1));
-        this.mainWindow.repaint();
+        this.labelLevel.setText("Current level: " + this.levelCounter + "    "
+                + "Number of wins: " + (this.levelCounter - 1));
     }
 
     private void gameRestart() {
         this.initializeBoard(this.boardSize);
-        this.mainWindow.setBoard(this.currentBoard);
+        this.mainWindow.replaceBoard(this.currentBoard);
 
         this.levelCounter = 1;
         this.updateLevelLabel();
+
+        this.mainWindow.repaint();
     }
 
     private void gameCheckWin() {
         if (this.currentBoard.checkWin()) {
-            this.addLevel();
             this.initializeBoard(this.boardSize);
-            this.mainWindow.setBoard(this.currentBoard);
+            this.mainWindow.replaceBoard(this.currentBoard);
+
+            this.levelCounter++;
+            this.updateLevelLabel();
         }
         this.mainWindow.repaint();
-    }
-
-    private void addLevel() {
-        this.levelCounter += 1;
-        this.updateLevelLabel();
     }
 
     @Override
