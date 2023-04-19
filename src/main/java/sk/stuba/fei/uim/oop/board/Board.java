@@ -158,7 +158,7 @@ public class Board extends JPanel {
                 return dir;
             }
         }
-        return Direction.NONE;
+        return null;
     }
 
     private boolean isStraight(Node prevNode, Node nextNode) {
@@ -181,7 +181,10 @@ public class Board extends JPanel {
         Tile currTile = this.startTile;
         int checkX = ((StartEndPipe) this.startTile).getBoardX();
         int checkY = ((StartEndPipe) this.startTile).getBoardY();
-        Direction direction = currTile.getDirection(Direction.NONE);
+        Direction direction = currTile.getDirection();
+        if(direction == null) {
+            return false;
+        }
         checkX = checkX + direction.getX();
         checkY = checkY + direction.getY();
         Tile nextTile = getNextTile(checkX, checkY);
@@ -192,11 +195,11 @@ public class Board extends JPanel {
                 checkedTiles.add(currTile);
                 break;
             }
+            currTile.setChecked(true);
+            checkedTiles.add(currTile);
             if (nextTile.checkConnection(direction.getOppositeDirection())) {
-                currTile.setChecked(true);
-                checkedTiles.add(currTile);
                 currTile = nextTile;
-                if (nextTile.getDirection(direction.getOppositeDirection()) != Direction.NONE) {
+                if (nextTile.getDirection(direction.getOppositeDirection()) != null) {
                     direction = nextTile.getDirection(direction.getOppositeDirection());
                     checkX = checkX + direction.getX();
                     checkY = checkY + direction.getY();
@@ -205,9 +208,7 @@ public class Board extends JPanel {
                     nextTile = null;
                 }
             } else {
-                currTile.setChecked(true);
-                checkedTiles.add(currTile);
-                break;
+                currTile = null;
             }
         }
         return checkedTiles.contains(this.endTile);

@@ -20,7 +20,7 @@ public class StartEndPipe extends Tile {
         this.playable = false;
         this.highlight = false;
         this.checked = false;
-        if (direction != Direction.NONE) {
+        if (direction != null) {
             this.connector.put(direction, true);
         }
     }

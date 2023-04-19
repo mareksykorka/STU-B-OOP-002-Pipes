@@ -57,10 +57,8 @@ public class GameLogic extends UniversalAdapter {
     private void gameRestart() {
         this.initializeBoard(this.boardSize);
         this.mainWindow.replaceBoard(this.currentBoard);
-
         this.levelCounter = 1;
         this.updateLevelLabel();
-
         this.mainWindow.repaint();
     }
 
@@ -68,7 +66,6 @@ public class GameLogic extends UniversalAdapter {
         if (this.currentBoard.checkWin()) {
             this.initializeBoard(this.boardSize);
             this.mainWindow.replaceBoard(this.currentBoard);
-
             this.levelCounter++;
             this.updateLevelLabel();
         }
