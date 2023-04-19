@@ -17,6 +17,7 @@ public abstract class Tile extends JPanel {
     protected boolean highlight;
     @Setter
     protected boolean checked;
+    @Getter
     protected HashMap<Direction, Boolean> connector;
 
     protected void initConnector() {
@@ -27,13 +28,8 @@ public abstract class Tile extends JPanel {
         this.connector.put(Direction.RIGHT, false);
     }
 
-    public boolean checkCorrectOrientation() {
-        /*for (Direction dir : this.neighbour.keySet()) {
-            if (this.neighbour.get(dir).equals(prevTile)) {
-                return this.connector.get(dir);
-            }
-        }*/
-        return false;
+    public boolean checkCorrectOrientation(Direction checkDirection) {
+        return this.connector.get(checkDirection);
     }
 
     public Direction getNextDirection(Direction checkedDirection) {

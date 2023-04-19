@@ -112,11 +112,11 @@ public class Board extends JPanel {
     private ArrayList<Node> getNonVisitedNodes(Node node, Node[][] nodes) {
         int nextX, nextY;
         ArrayList<Node> nonVisitedNeighbours = new ArrayList<>();
-        for (Direction dir:this.allDirections) {
-            nextX = node.getX()+dir.getX();
-            nextY = node.getY()+dir.getY();
-            if(isInBounds(nextX) && isInBounds(nextY)){
-                if(!nodes[nextX][nextY].isVisited()){
+        for (Direction dir : this.allDirections) {
+            nextX = node.getX() + dir.getX();
+            nextY = node.getY() + dir.getY();
+            if (isInBounds(nextX) && isInBounds(nextY)) {
+                if (!nodes[nextX][nextY].isVisited()) {
                     nonVisitedNeighbours.add(nodes[nextX][nextY]);
                 }
             }
@@ -133,20 +133,20 @@ public class Board extends JPanel {
         this.board = new Tile[this.boardSize][this.boardSize];
 
         for (int i = 0; i < dfsPath.size(); i++) {
-            if(dfsPath.get(i).isStart()){
-                this.startTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(true, this.getDirection(dfsPath.get(i), dfsPath.get(i+1)));
-            } else if(dfsPath.get(i).isFinish()){
-                this.endTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(false, this.getDirection(dfsPath.get(i), dfsPath.get(i-1)));
-            } else if(this.isStraight(dfsPath.get(i-1), dfsPath.get(i+1))){
+            if (dfsPath.get(i).isStart()) {
+                this.startTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(true, this.getDirection(dfsPath.get(i), dfsPath.get(i + 1)));
+            } else if (dfsPath.get(i).isFinish()) {
+                this.endTile = this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StartEndPipe(false, this.getDirection(dfsPath.get(i), dfsPath.get(i - 1)));
+            } else if (this.isStraight(dfsPath.get(i - 1), dfsPath.get(i + 1))) {
                 this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new StraightPipe(this.randomGenerator);
-            } else{
+            } else {
                 this.board[dfsPath.get(i).getX()][dfsPath.get(i).getY()] = new BentPipe(this.randomGenerator);
             }
         }
 
         for (int y = 0; y < this.boardSize; y++) {
             for (int x = 0; x < this.boardSize; x++) {
-                if(this.board[x][y] == null){
+                if (this.board[x][y] == null) {
                     this.board[x][y] = new EmptyTile(x, y);
                 }
             }
@@ -158,19 +158,19 @@ public class Board extends JPanel {
     }
 
     private Direction getDirection(Node node1, Node node2) {
-        int dirX = node2.getX()-node1.getX();
-        int dirY = node2.getY()-node1.getY();
+        int dirX = node2.getX() - node1.getX();
+        int dirY = node2.getY() - node1.getY();
 
-        if(dirX == Direction.UP.getX() && dirY == Direction.UP.getY()){
+        if (dirX == Direction.UP.getX() && dirY == Direction.UP.getY()) {
             return Direction.UP;
         }
-        if(dirX == Direction.RIGHT.getX() && dirY == Direction.RIGHT.getY()){
+        if (dirX == Direction.RIGHT.getX() && dirY == Direction.RIGHT.getY()) {
             return Direction.RIGHT;
         }
-        if(dirX == Direction.DOWN.getX() && dirY == Direction.DOWN.getY()){
+        if (dirX == Direction.DOWN.getX() && dirY == Direction.DOWN.getY()) {
             return Direction.DOWN;
         }
-        if(dirX == Direction.LEFT.getX() && dirY == Direction.LEFT.getY()){
+        if (dirX == Direction.LEFT.getX() && dirY == Direction.LEFT.getY()) {
             return Direction.LEFT;
         }
         return null;
@@ -185,14 +185,32 @@ public class Board extends JPanel {
     }
 
     public boolean checkWin() {
-
-        //TODO: Reimplement
-        /*// Check WIN rework
-
         Stack<Tile> checkedTiles = new Stack<>();
-        Tile currTile = this.startTile;
-        Direction nextTileDirection = currTile.getNextDirection(null);
-        Tile nextTile = this.board[currTile.getX()+nextTileDirection.getX()][currTile.getY()+nextTileDirection.getY()];
+        Direction incomingDirection = null;
+        Tile currTile = null;
+        Tile nextTile = null;
+        int tileX = 0;
+        int tileY = 0;
+
+        for (int y = 0; y < this.boardSize; y++) {
+            for (int x = 0; x < this.boardSize; x++) {
+                if (this.board[x][y] == startTile) {
+                    currTile = this.board[x][y];
+                    tileX = x;
+                    tileY = y;
+                }
+            }
+        }
+
+        incomingDirection = currTile.getNextDirection(null);
+
+        tileX = tileX + incomingDirection.getX();
+        tileY = tileY + incomingDirection.getY();
+        if (isInBounds(tileX) && isInBounds(tileY)) {
+            nextTile = this.board[tileX][tileY];
+        } else {
+            nextTile = null;
+        }
 
         while (currTile != null) {
             if (nextTile == null || nextTile instanceof EmptyTile) {
@@ -200,10 +218,23 @@ public class Board extends JPanel {
                 checkedTiles.add(currTile);
                 break;
             }
-            if (nextTile.checkCorrectOrientation()) {
+            if (nextTile.checkCorrectOrientation(incomingDirection.getOppositeDirection())) {
                 currTile.setChecked(true);
                 checkedTiles.add(currTile);
                 currTile = nextTile;
+                if (nextTile.getNextDirection(incomingDirection.getOppositeDirection()) != null) {
+                    incomingDirection = nextTile.getNextDirection(incomingDirection.getOppositeDirection());
+                    tileX = tileX + incomingDirection.getX();
+                    tileY = tileY + incomingDirection.getY();
+
+                    if (isInBounds(tileX) && isInBounds(tileY)) {
+                        nextTile = this.board[tileX][tileY];
+                    } else {
+                        nextTile = null;
+                    }
+                } else {
+                    nextTile = null;
+                }
             } else {
                 currTile.setChecked(true);
                 checkedTiles.add(currTile);
@@ -211,8 +242,7 @@ public class Board extends JPanel {
             }
         }
 
-        return checkedTiles.contains(this.endTile);*/
-        return false;
+        return checkedTiles.contains(this.endTile);
     }
 
     public void uncheckTiles() {
