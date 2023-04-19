@@ -34,19 +34,22 @@ public abstract class Tile extends JPanel {
         this.connector.put(Direction.RIGHT, false);
     }
 
-    public boolean checkCorrectOrientation(Direction checkDirection) {
-        return this.connector.get(checkDirection);
+    public boolean checkConnection(Direction checkDirection) {
+        if(checkDirection != Direction.NONE){
+            return this.connector.get(checkDirection);
+        }
+        return false;
     }
 
-    public Direction getNextDirection(Direction checkedDirection) {
+    public Direction getDirection(Direction excludedDirection) {
         for (Direction dir : this.connector.keySet()) {
-            if (dir != checkedDirection) {
+            if (dir != excludedDirection) {
                 if (this.connector.get(dir)) {
                     return dir;
                 }
             }
         }
-        return null;
+        return Direction.NONE;
     }
 
     public void rotateClockwise(int amount) {

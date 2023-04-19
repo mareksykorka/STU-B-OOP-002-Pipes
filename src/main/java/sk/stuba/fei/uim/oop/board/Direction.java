@@ -7,7 +7,7 @@ public enum Direction {
     DOWN(0, 1),
     LEFT(-1, 0),
     RIGHT(1, 0),
-    NULL(0, 0);
+    NONE(0, 0);
     @Getter
     private int x;
     @Getter
@@ -29,7 +29,7 @@ public enum Direction {
             case LEFT:
                 return RIGHT;
             default:
-                return NULL;
+                return NONE;
         }
     }
 }

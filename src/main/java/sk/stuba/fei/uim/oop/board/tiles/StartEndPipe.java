@@ -1,19 +1,26 @@
 package sk.stuba.fei.uim.oop.board.tiles;
 
+import lombok.Getter;
 import sk.stuba.fei.uim.oop.board.Direction;
 
 import java.awt.*;
 
 public class StartEndPipe extends Tile {
     private boolean start;
+    @Getter
+    private int boardX;
+    @Getter
+    private int boardY;
 
-    public StartEndPipe(boolean start, Direction direction) {
+    public StartEndPipe(boolean start, int x, int y,Direction direction) {
         super();
         this.start = start;
+        this.boardX = x;
+        this.boardY = y;
         this.playable = false;
         this.highlight = false;
         this.checked = false;
-        if (direction != null) {
+        if (direction != Direction.NONE) {
             this.connector.put(direction, true);
         }
     }

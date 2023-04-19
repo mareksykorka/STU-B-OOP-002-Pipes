@@ -17,10 +17,10 @@ public class GameLogic extends UniversalAdapter {
     private GameGraphics mainWindow;
     @Getter
     private JLabel labelBoardSize;
-    private int boardSize;
-    private Board currentBoard;
     @Getter
     private JLabel labelLevel;
+    private int boardSize;
+    private Board currentBoard;
     private int levelCounter;
 
     public GameLogic(GameGraphics gameGraphics) {
@@ -56,12 +56,10 @@ public class GameLogic extends UniversalAdapter {
 
     private void gameRestart() {
         this.initializeBoard(this.boardSize);
+        this.mainWindow.setBoard(this.currentBoard);
 
         this.levelCounter = 1;
         this.updateLevelLabel();
-
-        this.mainWindow.setBoard(this.currentBoard);
-        this.mainWindow.repaint();
     }
 
     private void gameCheckWin() {
