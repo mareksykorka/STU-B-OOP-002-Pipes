@@ -174,41 +174,38 @@ public class Board extends JPanel {
     }
 
     public boolean checkWin() {
-        if(!(this.startTile instanceof StartEndPipe)) {
-            return false;
-        }
         Stack<Tile> checkedTiles = new Stack<>();
-        Tile currTile = this.startTile;
-        int checkX = ((StartEndPipe) this.startTile).getBoardX();
-        int checkY = ((StartEndPipe) this.startTile).getBoardY();
-        Direction direction = currTile.getDirection();
-        if(direction == null) {
-            return false;
-        }
-        checkX = checkX + direction.getX();
-        checkY = checkY + direction.getY();
-        Tile nextTile = getNextTile(checkX, checkY);
+        if(this.startTile instanceof StartEndPipe) {
+            Tile currTile = this.startTile;
+            Direction direction = currTile.getDirection();
+            if(direction == null) {
+                return false;
+            }
+            int checkX = ((StartEndPipe) this.startTile).getBoardX() + direction.getX();
+            int checkY = ((StartEndPipe) this.startTile).getBoardY() + direction.getY();
+            Tile nextTile = getNextTile(checkX, checkY);
 
-        while(currTile != null){
-            if (nextTile == null || nextTile instanceof EmptyTile) {
+            while(currTile != null) {
                 currTile.setChecked(true);
                 checkedTiles.add(currTile);
-                break;
-            }
-            currTile.setChecked(true);
-            checkedTiles.add(currTile);
-            if (nextTile.checkConnection(direction.getOppositeDirection())) {
-                currTile = nextTile;
-                if (nextTile.getDirection(direction.getOppositeDirection()) != null) {
-                    direction = nextTile.getDirection(direction.getOppositeDirection());
-                    checkX = checkX + direction.getX();
-                    checkY = checkY + direction.getY();
-                    nextTile = getNextTile(checkX, checkY);
+                if (nextTile != null && !(nextTile instanceof EmptyTile)) {
+                    if (nextTile.checkConnection(direction.getOppositeDirection())) {
+                        currTile = nextTile;
+                        Direction nextDirection = nextTile.getDirection(direction.getOppositeDirection());
+                        if (nextDirection != null) {
+                            direction = nextDirection;
+                            checkX = checkX + nextDirection.getX();
+                            checkY = checkY + nextDirection.getY();
+                            nextTile = getNextTile(checkX, checkY);
+                        } else {
+                            nextTile = null;
+                        }
+                    } else {
+                        currTile = null;
+                    }
                 } else {
-                    nextTile = null;
+                    currTile = null;
                 }
-            } else {
-                currTile = null;
             }
         }
         return checkedTiles.contains(this.endTile);
