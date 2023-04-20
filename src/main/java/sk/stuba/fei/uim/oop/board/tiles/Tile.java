@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.oop.utility.GameDefs;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 
 public abstract class Tile extends JPanel {
@@ -109,36 +110,41 @@ public abstract class Tile extends JPanel {
 
         g2D.setColor(GameDefs.COLOR_BLACK);
         g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_PIPE_WALL_RATIO));
-        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
-        paintLine(g2D, dim, xCenter, yCenter);
+        this.paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
+        this.paintLine(g2D, dim, xCenter, yCenter);
 
         g2D.setColor(GameDefs.COLOR_DARK_GRAY);
         g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_PIPE_IN_RATIO));
-        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
-        paintLine(g2D, dim, xCenter, yCenter);
+        this.paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
+        this.paintLine(g2D, dim, xCenter, yCenter);
     }
 
     protected void paintWater(Graphics2D g2D, Dimension dim) {
         float averageTileDimension = (float) ((dim.width + dim.height) * 0.5);
-        float xCenter = (float) dim.width / 2;
-        float yCenter = (float) dim.height / 2;
+        float xCenter = (float) (dim.width * 0.5);
+        float yCenter = (float) (dim.height * 0.5);
 
         g2D.setColor(GameDefs.COLOR_BLUE);
         g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_WATER_RATIO));
-        paintLine(g2D, dim, xCenter, yCenter);
+        this.paintLine(g2D, dim, xCenter, yCenter);
     }
 
     protected void paintStartEnd(Graphics2D g2D, Dimension dim, boolean water) {
         g2D.setColor(GameDefs.COLOR_BLACK);
-        g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1 - 2 * 0.2)), (int) (dim.height * (1 - 2 * 0.2)));
+        this.paintRect(g2D, dim, GameDefs.PIPE_WALL_END_RATIO);
 
         g2D.setColor(GameDefs.COLOR_DARK_GRAY);
-        g2D.fillRect((int) (dim.width * 0.23), (int) (dim.height * 0.23), (int) (dim.width * (1 - 2 * 0.23)), (int) (dim.height * (1 - 2 * 0.23)));
+        this.paintRect(g2D, dim, GameDefs.PIPE_IN_END_RATIO);
 
         if (water) {
             g2D.setColor(GameDefs.COLOR_BLUE);
-            g2D.fillRect((int) (dim.width * 0.26), (int) (dim.height * 0.26), (int) (dim.width * (1 - 2 * 0.26)), (int) (dim.height * (1 - 2 * 0.26)));
+            this.paintRect(g2D, dim, GameDefs.WATER_END_RATIO);
         }
+    }
+
+    private void paintRect(Graphics2D g2D, Dimension dim, float drawRatio) {
+        g2D.fill(new Rectangle2D.Double(dim.width * drawRatio, dim.height * drawRatio,
+                dim.width * (1 - 2 * drawRatio), dim.height * (1 - 2 * drawRatio)));
     }
 
     private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter) {
@@ -164,16 +170,16 @@ public abstract class Tile extends JPanel {
         }
 
         if (connector.get(Direction.UP)) {
-            g2D.draw(new Line2D.Float(xCenter + xOffset, 0, xCenter - xOffset, upY));
+            g2D.draw(new Line2D.Double(xCenter + xOffset, 0, xCenter - xOffset, upY));
         }
         if (connector.get(Direction.RIGHT)) {
-            g2D.draw(new Line2D.Float(dim.width, yCenter + yOffset, rgX, yCenter - yOffset));
+            g2D.draw(new Line2D.Double(dim.width, yCenter + yOffset, rgX, yCenter - yOffset));
         }
         if (connector.get(Direction.DOWN)) {
-            g2D.draw(new Line2D.Float(xCenter + xOffset, dim.height, xCenter - xOffset, dwY));
+            g2D.draw(new Line2D.Double(xCenter + xOffset, dim.height, xCenter - xOffset, dwY));
         }
         if (connector.get(Direction.LEFT)) {
-            g2D.draw(new Line2D.Float(0, yCenter + yOffset, lfX, yCenter - yOffset));
+            g2D.draw(new Line2D.Double(0, yCenter + yOffset, lfX, yCenter - yOffset));
         }
     }
 }
