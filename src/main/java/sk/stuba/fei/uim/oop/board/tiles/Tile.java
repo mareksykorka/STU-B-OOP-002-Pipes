@@ -23,7 +23,7 @@ public abstract class Tile extends JPanel {
     protected Tile() {
         this.initConnector();
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        this.setBackground(GameDefs.LIGHT_GRAY);
+        this.setBackground(GameDefs.COLOR_LIGHT_GRAY);
     }
 
     protected void initConnector() {
@@ -86,6 +86,7 @@ public abstract class Tile extends JPanel {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         Dimension dim = this.getSize();
+        float averageTileDimension = (float) ((dim.width + dim.height) * 0.5);
 
         if (this.highlight) {
             if (this.playable) {
@@ -93,56 +94,59 @@ public abstract class Tile extends JPanel {
             } else {
                 g2D.setColor(GameDefs.HIGHLIGHT_NON_PLAYABLE);
             }
-            g2D.setStroke(new BasicStroke((float) (dim.width * 0.2)));
+            g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_HIGHLIGHT_RATIO));
             g2D.drawRect(0, 0, dim.width, dim.height);
             this.highlight = false;
         }
     }
 
     protected void paintPipe(Graphics2D g2D, Dimension dim) {
-        BasicStroke pipeWall = new BasicStroke((float) (dim.width * 0.32));
-        BasicStroke pipeIn = new BasicStroke((float) (dim.width * 0.25));
-        float xCenter = (float) dim.width / 2;
-        float yCenter = (float) dim.height / 2;
-        float xPipeEndWidth = (float) dim.width / 8;
-        float yPipeEndWidth = (float) dim.height / 8;
+        float averageTileDimension = (float) ((dim.width + dim.height) * 0.5);
+        float xCenter = (float) (dim.width * 0.5);
+        float yCenter = (float) (dim.height * 0.5);
+        float xPipeEndWidth = dim.width * GameDefs.PIPE_END_WIDTH_RATIO;
+        float yPipeEndWidth = dim.height * GameDefs.PIPE_END_WIDTH_RATIO;
 
-        g2D.setColor(GameDefs.BLACK);
-        g2D.setStroke(pipeWall);
-        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth, true);
+        g2D.setColor(GameDefs.COLOR_BLACK);
+        g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_PIPE_WALL_RATIO));
+        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
         paintLine(g2D, dim, xCenter, yCenter);
 
-        g2D.setColor(GameDefs.DARK_GRAY);
-        g2D.setStroke(pipeIn);
-        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth, true);
+        g2D.setColor(GameDefs.COLOR_DARK_GRAY);
+        g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_PIPE_IN_RATIO));
+        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
         paintLine(g2D, dim, xCenter, yCenter);
     }
 
     protected void paintWater(Graphics2D g2D, Dimension dim) {
-        BasicStroke water = new BasicStroke((float) (dim.width * 0.2));
+        float averageTileDimension = (float) ((dim.width + dim.height) * 0.5);
         float xCenter = (float) dim.width / 2;
         float yCenter = (float) dim.height / 2;
 
-        g2D.setColor(GameDefs.BLUE);
-        g2D.setStroke(water);
+        g2D.setColor(GameDefs.COLOR_BLUE);
+        g2D.setStroke(new BasicStroke(averageTileDimension * GameDefs.STROKE_WATER_RATIO));
         paintLine(g2D, dim, xCenter, yCenter);
     }
 
     protected void paintStartEnd(Graphics2D g2D, Dimension dim, boolean water) {
-        g2D.setColor(GameDefs.BLACK);
+        g2D.setColor(GameDefs.COLOR_BLACK);
         g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1 - 2 * 0.2)), (int) (dim.height * (1 - 2 * 0.2)));
 
-        g2D.setColor(GameDefs.DARK_GRAY);
+        g2D.setColor(GameDefs.COLOR_DARK_GRAY);
         g2D.fillRect((int) (dim.width * 0.23), (int) (dim.height * 0.23), (int) (dim.width * (1 - 2 * 0.23)), (int) (dim.height * (1 - 2 * 0.23)));
 
         if (water) {
-            g2D.setColor(GameDefs.BLUE);
+            g2D.setColor(GameDefs.COLOR_BLUE);
             g2D.fillRect((int) (dim.width * 0.26), (int) (dim.height * 0.26), (int) (dim.width * (1 - 2 * 0.26)), (int) (dim.height * (1 - 2 * 0.26)));
         }
     }
 
     private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter) {
         this.paintLine(g2D, dim, xCenter, yCenter, 0, 0, false);
+    }
+
+    private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xOffset, float yOffset) {
+        this.paintLine(g2D, dim, xCenter, yCenter, xOffset, yOffset, true);
     }
 
     private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xOffset, float yOffset, boolean isEdge) {

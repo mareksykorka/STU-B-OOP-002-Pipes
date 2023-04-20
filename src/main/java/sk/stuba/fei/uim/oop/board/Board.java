@@ -29,7 +29,7 @@ public class Board extends JPanel {
         this.populateWithPipes(dfsPath);
         this.setBoard();
 
-        this.setBackground(GameDefs.GRAY);
+        this.setBackground(GameDefs.COLOR_GRAY);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 

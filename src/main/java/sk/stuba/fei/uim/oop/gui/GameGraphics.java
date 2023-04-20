@@ -18,7 +18,7 @@ public class GameGraphics extends JFrame {
         this.setResizable(false);
         this.setFocusable(true);
         this.requestFocusInWindow();
-        this.setBackground(GameDefs.LIGHT_GRAY);
+        this.setBackground(GameDefs.COLOR_LIGHT_GRAY);
         this.setLayout(new GridBagLayout());
         this.frameConstraints = new GridBagConstraints();
         this.frameConstraints.fill = GridBagConstraints.BOTH;
@@ -38,7 +38,7 @@ public class GameGraphics extends JFrame {
 
     private JPanel createGameMenu(GameLogic logic) {
         JPanel gameMenu = new JPanel();
-        gameMenu.setBackground(GameDefs.LIGHT_GRAY);
+        gameMenu.setBackground(GameDefs.COLOR_LIGHT_GRAY);
         gameMenu.setLayout(new GridBagLayout());
         GridBagConstraints menuConstraints = new GridBagConstraints();
         menuConstraints.fill = GridBagConstraints.BOTH;
