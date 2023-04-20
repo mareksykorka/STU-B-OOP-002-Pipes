@@ -31,7 +31,7 @@ public class StartEndPipe extends Tile {
         Graphics2D g2D = (Graphics2D) g;
         Dimension dim = this.getSize();
 
-        this.paintPipeEnd(g2D, dim, this.start);
+        this.paintStartEnd(g2D, dim, this.start);
         this.paintPipe(g2D, dim);
         if (this.start) {
             this.paintWater(g2D, dim);

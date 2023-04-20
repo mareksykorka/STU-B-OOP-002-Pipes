@@ -35,7 +35,7 @@ public abstract class Tile extends JPanel {
     }
 
     public boolean checkConnection(Direction checkDirection) {
-        if(checkDirection != null){
+        if (checkDirection != null) {
             return this.connector.get(checkDirection);
         }
         return false;
@@ -109,11 +109,13 @@ public abstract class Tile extends JPanel {
 
         g2D.setColor(GameDefs.BLACK);
         g2D.setStroke(pipeWall);
-        paintSection(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
+        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth, true);
+        paintLine(g2D, dim, xCenter, yCenter);
 
         g2D.setColor(GameDefs.DARK_GRAY);
         g2D.setStroke(pipeIn);
-        paintSection(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth);
+        paintLine(g2D, dim, xCenter, yCenter, xPipeEndWidth, yPipeEndWidth, true);
+        paintLine(g2D, dim, xCenter, yCenter);
     }
 
     protected void paintWater(Graphics2D g2D, Dimension dim) {
@@ -123,21 +125,10 @@ public abstract class Tile extends JPanel {
 
         g2D.setColor(GameDefs.BLUE);
         g2D.setStroke(water);
-        if (connector.get(Direction.UP)) {
-            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
-        }
-        if (connector.get(Direction.RIGHT)) {
-            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
-        }
-        if (connector.get(Direction.DOWN)) {
-            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
-        }
-        if (connector.get(Direction.LEFT)) {
-            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
-        }
+        paintLine(g2D, dim, xCenter, yCenter);
     }
 
-    protected void paintPipeEnd(Graphics2D g2D, Dimension dim, boolean water) {
+    protected void paintStartEnd(Graphics2D g2D, Dimension dim, boolean water) {
         g2D.setColor(GameDefs.BLACK);
         g2D.fillRect((int) (dim.width * 0.2), (int) (dim.height * 0.2), (int) (dim.width * (1 - 2 * 0.2)), (int) (dim.height * (1 - 2 * 0.2)));
 
@@ -150,38 +141,35 @@ public abstract class Tile extends JPanel {
         }
     }
 
-    private void paintSection(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xPipeEndWidth, float yPipeEndWidth) {
-        if (connector.get(Direction.UP)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, 0, xCenter - xPipeEndWidth, 0));
-            g2D.draw(new Line2D.Float(xCenter, 0, xCenter, yCenter));
-        }
-        if (connector.get(Direction.RIGHT)) {
-            g2D.draw(new Line2D.Float(dim.width, yCenter + yPipeEndWidth, dim.width, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(dim.width, yCenter, xCenter, yCenter));
-        }
-        if (connector.get(Direction.DOWN)) {
-            g2D.draw(new Line2D.Float(xCenter + xPipeEndWidth, dim.height, xCenter - xPipeEndWidth, dim.height));
-            g2D.draw(new Line2D.Float(xCenter, dim.height, xCenter, yCenter));
-        }
-        if (connector.get(Direction.LEFT)) {
-            g2D.draw(new Line2D.Float(0, yCenter + yPipeEndWidth, 0, yCenter - yPipeEndWidth));
-            g2D.draw(new Line2D.Float(0, yCenter, xCenter, yCenter));
-        }
+    private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter) {
+        this.paintLine(g2D, dim, xCenter, yCenter, 0, 0, false);
     }
 
-    /*
-    private void paintStrokeLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xPipeEndWidth, float yPipeEndWidth) {
-        if (connector.get(Direction.UP)) {
+    private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter, float xOffset, float yOffset, boolean isEdge) {
+        float upY, rgX, dwY, lfX;
+        if (isEdge) {
+            upY = 0;
+            rgX = dim.width;
+            dwY = dim.height;
+            lfX = 0;
+        } else {
+            upY = yCenter;
+            rgX = xCenter;
+            dwY = yCenter;
+            lfX = xCenter;
+        }
 
+        if (connector.get(Direction.UP)) {
+            g2D.draw(new Line2D.Float(xCenter + xOffset, 0, xCenter - xOffset, upY));
         }
         if (connector.get(Direction.RIGHT)) {
-
+            g2D.draw(new Line2D.Float(dim.width, yCenter + yOffset, rgX, yCenter - yOffset));
         }
         if (connector.get(Direction.DOWN)) {
-
+            g2D.draw(new Line2D.Float(xCenter + xOffset, dim.height, xCenter - xOffset, dwY));
         }
         if (connector.get(Direction.LEFT)) {
-
+            g2D.draw(new Line2D.Float(0, yCenter + yOffset, lfX, yCenter - yOffset));
         }
-    }*/
+    }
 }
