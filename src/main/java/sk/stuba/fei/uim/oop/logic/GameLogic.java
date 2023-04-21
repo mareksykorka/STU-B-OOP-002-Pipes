@@ -82,6 +82,7 @@ public class GameLogic extends UniversalAdapter {
                 break;
             case KeyEvent.VK_ESCAPE:
                 this.mainWindow.dispose();
+                System.exit(0);
             default:
                 break;
         }
