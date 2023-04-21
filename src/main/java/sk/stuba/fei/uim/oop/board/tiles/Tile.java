@@ -3,14 +3,12 @@ package sk.stuba.fei.uim.oop.board.tiles;
 import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.Direction;
-import sk.stuba.fei.uim.oop.board.Node;
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Tile extends JPanel {
