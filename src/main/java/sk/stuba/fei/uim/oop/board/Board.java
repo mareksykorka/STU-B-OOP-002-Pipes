@@ -33,6 +33,54 @@ public class Board extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
+    private ArrayList<Node> getNonVisitedNodes(Node node, Node[][] nodes) {
+        ArrayList<Node> nonVisitedNeighbours = new ArrayList<>();
+        for (Direction dir : this.allDirections) {
+            int nextX = node.getX() + dir.getX();
+            int nextY = node.getY() + dir.getY();
+            if (isInBounds(nextX) && isInBounds(nextY)) {
+                if (!nodes[nextX][nextY].isVisited()) {
+                    nonVisitedNeighbours.add(nodes[nextX][nextY]);
+                }
+            }
+        }
+        return nonVisitedNeighbours;
+    }
+
+    private boolean isInBounds(int index) {
+        return ((index >= 0) && (index < this.boardSize));
+    }
+
+    private Direction getInitialDirection(Node node1, Node node2) {
+        int deltaX = node2.getX() - node1.getX();
+        int deltaY = node2.getY() - node1.getY();
+        for (Direction dir : this.allDirections) {
+            if (deltaX == dir.getX() && deltaY == dir.getY()) {
+                return dir;
+            }
+        }
+        return null;
+    }
+
+    private boolean isStraight(Node prevNode, Node nextNode) {
+        return ((prevNode.getX() == nextNode.getX()) || (prevNode.getY() == nextNode.getY()));
+    }
+
+    private void setBoard() {
+        for (int y = 0; y < this.boardSize; y++) {
+            for (int x = 0; x < this.boardSize; x++) {
+                this.add(board[x][y]);
+            }
+        }
+    }
+
+    private Tile getNextTile(int x, int y) {
+        if (isInBounds(x) && isInBounds(y)) {
+            return this.board[x][y];
+        }
+        return null;
+    }
+
     private Stack<Node> generatePath() {
         Node[][] allNodes = new Node[this.boardSize][this.boardSize];
         for (int y = 0; y < this.boardSize; y++) {
@@ -101,24 +149,6 @@ public class Board extends JPanel {
         return startNode;
     }
 
-    private ArrayList<Node> getNonVisitedNodes(Node node, Node[][] nodes) {
-        ArrayList<Node> nonVisitedNeighbours = new ArrayList<>();
-        for (Direction dir : this.allDirections) {
-            int nextX = node.getX() + dir.getX();
-            int nextY = node.getY() + dir.getY();
-            if (isInBounds(nextX) && isInBounds(nextY)) {
-                if (!nodes[nextX][nextY].isVisited()) {
-                    nonVisitedNeighbours.add(nodes[nextX][nextY]);
-                }
-            }
-        }
-        return nonVisitedNeighbours;
-    }
-
-    private boolean isInBounds(int index) {
-        return ((index >= 0) && (index < this.boardSize));
-    }
-
     private void populateWithPipes(Stack<Node> dfsPath) {
         this.board = new Tile[this.boardSize][this.boardSize];
         Node currNode;
@@ -129,10 +159,10 @@ public class Board extends JPanel {
             boardX = currNode.getX();
             boardY = currNode.getY();
             if (currNode.isStart()) {
-                this.board[boardX][boardY] = new StartEndPipe(true, boardX, boardY, this.getDirection(currNode, dfsPath.get(i + 1)));
+                this.board[boardX][boardY] = new StartEndPipe(true, boardX, boardY, this.getInitialDirection(currNode, dfsPath.get(i + 1)));
                 this.startTile = this.board[boardX][boardY];
             } else if (currNode.isFinish()) {
-                this.board[boardX][boardY] = new StartEndPipe(false, boardX, boardY, this.getDirection(currNode, dfsPath.get(i - 1)));
+                this.board[boardX][boardY] = new StartEndPipe(false, boardX, boardY, this.getInitialDirection(currNode, dfsPath.get(i - 1)));
                 this.endTile = this.board[boardX][boardY];
             } else if (this.isStraight(dfsPath.get(i - 1), dfsPath.get(i + 1))) {
                 this.board[boardX][boardY] = new StraightPipe(this.randomGenerator);
@@ -150,72 +180,41 @@ public class Board extends JPanel {
         }
     }
 
-    private Direction getDirection(Node node1, Node node2) {
-        int deltaX = node2.getX() - node1.getX();
-        int deltaY = node2.getY() - node1.getY();
-        for (Direction dir : this.allDirections) {
-            if (deltaX == dir.getX() && deltaY == dir.getY()) {
-                return dir;
-            }
-        }
-        return null;
-    }
-
-    private boolean isStraight(Node prevNode, Node nextNode) {
-        return prevNode.getX() == nextNode.getX() || prevNode.getY() == nextNode.getY();
-    }
-
-    private void setBoard() {
-        for (int y = 0; y < this.boardSize; y++) {
-            for (int x = 0; x < this.boardSize; x++) {
-                this.add(board[x][y]);
-            }
-        }
-    }
-
     public boolean checkWin() {
         Stack<Tile> checkedTiles = new Stack<>();
-        if(this.startTile instanceof StartEndPipe) {
+        if (this.startTile instanceof StartEndPipe) {
             Tile currTile = this.startTile;
             Direction direction = currTile.getDirection();
-            if(direction == null) {
-                return false;
-            }
-            int checkX = ((StartEndPipe) this.startTile).getBoardX() + direction.getX();
-            int checkY = ((StartEndPipe) this.startTile).getBoardY() + direction.getY();
-            Tile nextTile = getNextTile(checkX, checkY);
+            if (direction != null) {
+                int checkX = ((StartEndPipe) this.startTile).getBoardX() + direction.getX();
+                int checkY = ((StartEndPipe) this.startTile).getBoardY() + direction.getY();
+                Tile nextTile = getNextTile(checkX, checkY);
 
-            while(currTile != null) {
-                currTile.setChecked(true);
-                checkedTiles.add(currTile);
-                if (nextTile != null && !(nextTile instanceof EmptyTile)) {
-                    if (nextTile.checkConnection(direction.getOppositeDirection())) {
-                        currTile = nextTile;
-                        Direction nextDirection = nextTile.getDirection(direction.getOppositeDirection());
-                        if (nextDirection != null) {
-                            direction = nextDirection;
-                            checkX = checkX + nextDirection.getX();
-                            checkY = checkY + nextDirection.getY();
-                            nextTile = getNextTile(checkX, checkY);
+                while (currTile != null) {
+                    currTile.setChecked(true);
+                    checkedTiles.add(currTile);
+                    if ((nextTile != null) && !(nextTile instanceof EmptyTile)) {
+                        if (nextTile.checkConnection(direction.getOppositeDirection())) {
+                            currTile = nextTile;
+                            Direction nextDirection = nextTile.getDirection(direction.getOppositeDirection());
+                            if (nextDirection != null) {
+                                direction = nextDirection;
+                                checkX = checkX + nextDirection.getX();
+                                checkY = checkY + nextDirection.getY();
+                                nextTile = getNextTile(checkX, checkY);
+                            } else {
+                                nextTile = null;
+                            }
                         } else {
-                            nextTile = null;
+                            currTile = null;
                         }
                     } else {
                         currTile = null;
                     }
-                } else {
-                    currTile = null;
                 }
             }
         }
         return checkedTiles.contains(this.endTile);
-    }
-
-    public Tile getNextTile(int x, int y){
-        if (isInBounds(x) && isInBounds(y)) {
-            return this.board[x][y];
-        }
-        return null;
     }
 
     public void uncheckTiles() {

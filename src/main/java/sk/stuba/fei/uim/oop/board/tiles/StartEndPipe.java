@@ -12,11 +12,11 @@ public class StartEndPipe extends Tile {
     @Getter
     private int boardY;
 
-    public StartEndPipe(boolean start, int x, int y,Direction direction) {
+    public StartEndPipe(boolean start, int boardX, int boardY, Direction direction) {
         super();
         this.start = start;
-        this.boardX = x;
-        this.boardY = y;
+        this.boardX = boardX;
+        this.boardY = boardY;
         this.playable = false;
         this.highlight = false;
         this.checked = false;

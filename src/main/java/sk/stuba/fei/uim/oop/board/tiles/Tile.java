@@ -3,12 +3,14 @@ package sk.stuba.fei.uim.oop.board.tiles;
 import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.board.Direction;
+import sk.stuba.fei.uim.oop.board.Node;
 import sk.stuba.fei.uim.oop.utility.GameDefs;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Tile extends JPanel {
@@ -27,6 +29,26 @@ public abstract class Tile extends JPanel {
         this.setBackground(GameDefs.COLOR_LIGHT_GRAY);
     }
 
+    public Direction getDirection() {
+        for (Direction dir : this.connector.keySet()) {
+            if (this.connector.get(dir)) {
+                return dir;
+            }
+        }
+        return null;
+    }
+
+    public Direction getDirection(Direction excludedDirection) {
+        for (Direction dir : this.connector.keySet()) {
+            if (!dir.equals(excludedDirection)) {
+                if (this.connector.get(dir)) {
+                    return dir;
+                }
+            }
+        }
+        return null;
+    }
+
     protected void initConnector() {
         this.connector = new HashMap<>();
         this.connector.put(Direction.UP, false);
@@ -40,26 +62,6 @@ public abstract class Tile extends JPanel {
             return this.connector.get(checkDirection);
         }
         return false;
-    }
-
-    public Direction getDirection() {
-        for (Direction dir : this.connector.keySet()) {
-            if (this.connector.get(dir)) {
-                return dir;
-            }
-        }
-        return null;
-    }
-
-    public Direction getDirection(Direction excludedDirection) {
-        for (Direction dir : this.connector.keySet()) {
-            if (dir != excludedDirection) {
-                if (this.connector.get(dir)) {
-                    return dir;
-                }
-            }
-        }
-        return null;
     }
 
     public void rotateClockwise(int amount) {
@@ -131,20 +133,19 @@ public abstract class Tile extends JPanel {
 
     protected void paintStartEnd(Graphics2D g2D, Dimension dim, boolean water) {
         g2D.setColor(GameDefs.COLOR_BLACK);
-        this.paintRect(g2D, dim, GameDefs.PIPE_WALL_END_RATIO);
+        this.paintRect(g2D, dim, GameDefs.PIPE_WALL_OFFSET);
 
         g2D.setColor(GameDefs.COLOR_DARK_GRAY);
-        this.paintRect(g2D, dim, GameDefs.PIPE_IN_END_RATIO);
+        this.paintRect(g2D, dim, GameDefs.PIPE_IN_OFFSET);
 
         if (water) {
             g2D.setColor(GameDefs.COLOR_BLUE);
-            this.paintRect(g2D, dim, GameDefs.WATER_END_RATIO);
+            this.paintRect(g2D, dim, GameDefs.WATER_END_OFFSET);
         }
     }
 
     private void paintRect(Graphics2D g2D, Dimension dim, float drawRatio) {
-        g2D.fill(new Rectangle2D.Double(dim.width * drawRatio, dim.height * drawRatio,
-                dim.width * (1 - 2 * drawRatio), dim.height * (1 - 2 * drawRatio)));
+        g2D.fill(new Rectangle2D.Double(dim.width * drawRatio, dim.height * drawRatio, dim.width * (1 - (2 * drawRatio)), dim.height * (1 - (2 * drawRatio))));
     }
 
     private void paintLine(Graphics2D g2D, Dimension dim, float xCenter, float yCenter) {

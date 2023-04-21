@@ -23,7 +23,7 @@ public class GameDefs {
     public static final float STROKE_HIGHLIGHT_RATIO = (float) 0.2;
     public static final float PIPE_END_WIDTH_RATIO = (float) 0.125;
 
-    public static final float PIPE_WALL_END_RATIO = (float) 0.19;
-    public static final float PIPE_IN_END_RATIO = (float) 0.22;
-    public static final float WATER_END_RATIO = (float) 0.26;
+    public static final float PIPE_WALL_OFFSET = (float) 0.19;
+    public static final float PIPE_IN_OFFSET = (float) 0.22;
+    public static final float WATER_END_OFFSET = (float) 0.26;
 }

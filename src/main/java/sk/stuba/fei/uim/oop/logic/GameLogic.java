@@ -16,56 +16,55 @@ import java.awt.event.MouseEvent;
 public class GameLogic extends UniversalAdapter {
     private GameGraphics mainWindow;
     @Getter
-    private JLabel labelBoardSize;
+    private JLabel boardSizeLabel;
     @Getter
-    private JLabel labelLevel;
+    private JLabel levelLabel;
     private int boardSize;
-    private Board currentBoard;
+    private Board board;
     private int levelCounter;
 
     public GameLogic(GameGraphics gameGraphics) {
         this.mainWindow = gameGraphics;
         this.boardSize = GameDefs.INITIAL_BOARD_SIZE;
         this.initializeBoard(this.boardSize);
-        this.mainWindow.replaceBoard(this.currentBoard);
+        this.mainWindow.replaceBoard(this.board);
 
-        this.labelBoardSize = new JLabel();
+        this.boardSizeLabel = new JLabel();
         this.updateBoardSizeLabel();
 
         this.levelCounter = 1;
-        this.labelLevel = new JLabel();
+        this.levelLabel = new JLabel();
         this.updateLevelLabel();
 
         this.mainWindow.repaint();
     }
 
     private void initializeBoard(int boardSize) {
-        this.currentBoard = new Board(boardSize);
-        this.currentBoard.addMouseMotionListener(this);
-        this.currentBoard.addMouseListener(this);
+        this.board = new Board(boardSize);
+        this.board.addMouseMotionListener(this);
+        this.board.addMouseListener(this);
     }
 
     private void updateBoardSizeLabel() {
-        this.labelBoardSize.setText("Current board size is: " + this.boardSize);
+        this.boardSizeLabel.setText("Current board size is: " + this.boardSize);
     }
 
     private void updateLevelLabel() {
-        this.labelLevel.setText("Current level: " + this.levelCounter + "    "
-                + "Number of wins: " + (this.levelCounter - 1));
+        this.levelLabel.setText("Current level: " + this.levelCounter + "    " + "Number of wins: " + (this.levelCounter - 1));
     }
 
     private void gameRestart() {
         this.initializeBoard(this.boardSize);
-        this.mainWindow.replaceBoard(this.currentBoard);
+        this.mainWindow.replaceBoard(this.board);
         this.levelCounter = 1;
         this.updateLevelLabel();
         this.mainWindow.repaint();
     }
 
     private void gameCheckWin() {
-        if (this.currentBoard.checkWin()) {
+        if (this.board.checkWin()) {
             this.initializeBoard(this.boardSize);
-            this.mainWindow.replaceBoard(this.currentBoard);
+            this.mainWindow.replaceBoard(this.board);
             this.levelCounter++;
             this.updateLevelLabel();
         }
@@ -114,17 +113,17 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
+        Component current = this.board.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Tile)) {
             return;
         }
         ((Tile) current).setHighlight(true);
-        this.currentBoard.repaint();
+        this.board.repaint();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
+        Component current = this.board.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Tile)) {
             return;
         }
@@ -137,18 +136,18 @@ public class GameLogic extends UniversalAdapter {
                 ((Tile) current).rotateCounterClockwise(1);
             }
         }
-        this.currentBoard.uncheckTiles();
-        this.currentBoard.repaint();
+        this.board.uncheckTiles();
+        this.board.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Component current = this.currentBoard.getComponentAt(e.getX(), e.getY());
+        Component current = this.board.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Tile)) {
             return;
         }
         ((Tile) current).setHighlight(true);
-        this.currentBoard.repaint();
+        this.board.repaint();
     }
 
     @Override

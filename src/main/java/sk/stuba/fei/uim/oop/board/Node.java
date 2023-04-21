@@ -2,6 +2,8 @@ package sk.stuba.fei.uim.oop.board;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 public class Node {
     private int x;

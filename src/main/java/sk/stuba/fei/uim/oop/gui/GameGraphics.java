@@ -43,7 +43,7 @@ public class GameGraphics extends JFrame {
         GridBagConstraints menuConstraints = new GridBagConstraints();
         menuConstraints.fill = GridBagConstraints.BOTH;
 
-        JLabel levelLabel = logic.getLabelLevel();
+        JLabel levelLabel = logic.getLevelLabel();
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         menuConstraints.gridx = 0;
         menuConstraints.gridy = 0;
@@ -71,7 +71,7 @@ public class GameGraphics extends JFrame {
         menuConstraints.weighty = 0.5;
         gameMenu.add(buttonRestart, menuConstraints);
 
-        JLabel boardSizeLabel = logic.getLabelBoardSize();
+        JLabel boardSizeLabel = logic.getBoardSizeLabel();
         boardSizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         menuConstraints.gridx = 0;
         menuConstraints.gridy = 1;
@@ -103,7 +103,6 @@ public class GameGraphics extends JFrame {
             this.remove(this.currentBoard);
         }
         this.currentBoard = board;
-
         this.frameConstraints.gridx = 0;
         this.frameConstraints.gridy = 1;
         this.frameConstraints.weightx = 1.0;
